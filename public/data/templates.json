@@ -4,7 +4,7 @@
         "title": "Example Poster 1",
         "category": "Poster",
         "thumbnail": "https://placehold.co/300x200?text=Poster+1",
-        "file": "./template/example01.json",
+        "file": "template/example01.json",
         "createdAt": "2024-05-20",
         "updatedAt": "2024-05-21"
     },
