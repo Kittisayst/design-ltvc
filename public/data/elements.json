@@ -1,0 +1,67 @@
+[
+    {
+        "category": "Basic Shapes",
+        "items": [
+            {
+                "type": "shape",
+                "icon": "./elements/Rectangle.png",
+                "label": "Rectangle",
+                "shapeType": "rect",
+                "options": {
+                    "width": 100,
+                    "height": 100,
+                    "fill": "#000000"
+                }
+            },
+            {
+                "type": "shape",
+                "icon": "./elements/Circle.png",
+                "label": "Circle",
+                "shapeType": "circle",
+                "options": {
+                    "radius": 50,
+                    "fill": "#000000"
+                }
+            },
+            {
+                "type": "shape",
+                "icon": "./elements/Triangle.png",
+                "label": "Triangle",
+                "shapeType": "triangle",
+                "options": {
+                    "width": 100,
+                    "height": 100,
+                    "fill": "#000000"
+                }
+            }
+        ]
+    },
+    {
+        "category": "Vector Graphics",
+        "items": [
+            {
+                "type": "svg",
+                "icon": "./elements/star-full-icon.svg",
+                "label": "Star Icon",
+                "src": "./elements/star-full-icon.svg"
+            },
+            {
+                "type": "svg",
+                "icon": "./elements/radio_button_checked.svg",
+                "label": "Radio Button Checked",
+                "src": "./elements/radio_button_checked.svg"
+            }
+        ]
+    },
+    {
+        "category": "Images / Icons",
+        "items": [
+            {
+                "type": "image",
+                "icon": "./elements/star-full-icon.svg",
+                "label": "Placeholder Icon",
+                "src": "./elements/star-full-icon.svg"
+            }
+        ]
+    }
+]
