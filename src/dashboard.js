@@ -5,7 +5,7 @@ let searchQuery = '';
 
 async function loadTemplates() {
     try {
-        const response = await fetch('/data/templates.json');
+        const response = await fetch('data/templates.json');
         if (!response.ok) throw new Error('Failed to load templates');
         const data = await response.json();
         allTemplates = data;
