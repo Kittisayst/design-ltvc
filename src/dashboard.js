@@ -5,7 +5,11 @@ let searchQuery = '';
 
 async function loadTemplates() {
     try {
-        const response = await fetch('data/templates.json');
+        let response = await fetch('data/templates.json');
+        if (!response.ok) {
+            // Fallback: try pointing to public folder (for raw source deployments)
+            response = await fetch('public/data/templates.json');
+        }
         if (!response.ok) throw new Error('Failed to load templates');
         const data = await response.json();
         allTemplates = data;
