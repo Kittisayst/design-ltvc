@@ -17,129 +17,90 @@
   <div id="app">
     <!-- Navbar -->
     <nav class="navbar">
-      <div class="nav-left"><a href="index.html" class="icon-btn" title="Back to Dashboard"
-          style="margin-right: 12px; text-decoration: none; display: flex; align-items: center; justify-content: center;"><svg
-            xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
-            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-            data-lucide="layout-grid" class="lucide lucide-layout-grid">
-            <rect width="7" height="7" x="3" y="3" rx="1"></rect>
-            <rect width="7" height="7" x="14" y="3" rx="1"></rect>
-            <rect width="7" height="7" x="14" y="14" rx="1"></rect>
-            <rect width="7" height="7" x="3" y="14" rx="1"></rect>
-          </svg></a>
-        <a href="index.html" class="logo"
-          style="font-size: 1.2rem; text-decoration: none; margin-right: 20px;">CanvasPro</a>
+      <div class="nav-left"><a href="index.html" class="icon-btn nav-link-btn" title="Back to Dashboard"><i
+            data-lucide="layout-grid"></i></a>
+        <a href="index.html" class="logo nav-brand">CanvasPro</a>
 
         <!-- Canvas Size Controls (Moved to Navbar) -->
-        <div class="toolbar-group"
-          style="flex-direction: row; align-items: center; gap: 8px; margin-right: 20px; border-right: 1px solid var(--border-color); padding-right: 20px;">
-          <span style="font-size: 0.8rem; color: var(--text-secondary);">Size:</span>
-          <div class="input-row" style="width: auto; padding: 4px 8px;">
-            <input type="number" id="c-width" value="800" style="width: 70px; text-align: center;">
-            <span style="padding: 0 4px;">x</span>
-            <input type="number" id="c-height" value="600" style="width: 70px; text-align: center;">
-            <button id="btn-resize" class="icon-btn" title="Update Canvas Size"
-              style="width: 24px; height: 24px; padding: 0;">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h7"></path>
-                <path d="M16 3h5v5"></path>
-                <path d="M21 3l-7 7"></path>
-              </svg>
-            </button>
-          </div>
+        <div style="border-right: 1px solid var(--border-color); padding-right: 12px; margin-right: 12px;">
+          <button id="btn-open-resize" class="btn btn-sm" title="Resize Canvas">
+            <i data-lucide="scaling" style="width: 14px; height: 14px;"></i>
+            <span>Resize</span>
+          </button>
         </div>
 
 
       </div>
 
       <div class="nav-center">
-        <div class="nav-actions" style="margin-right: 16px;">
+        <div class="nav-actions nav-undo-redo">
           <button id="btn-undo" class="icon-btn" title="Undo (Ctrl+Z)">
-            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none"
-              stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-lucide="undo-2"
-              class="lucide lucide-undo-2 lucide-layout-grid">
-              <path d="M9 14 4 9l5-5"></path>
-              <path d="M4 9h10.5a5.5 5.5 0 0 1 5.5 5.5a5.5 5.5 0 0 1-5.5 5.5H11"></path>
-            </svg>
+            <i data-lucide="undo-2" style="width: 14px; height: 14px;"></i>
           </button>
           <button id="btn-redo" class="icon-btn" title="Redo (Ctrl+Y)">
-            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none"
-              stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-lucide="redo-2"
-              class="lucide lucide-redo-2 lucide-layout-grid">
-              <path d="m15 14 5-5-5-5"></path>
-              <path d="M20 9H9.5A5.5 5.5 0 0 0 4 14.5A5.5 5.5 0 0 0 9.5 20H13"></path>
-            </svg>
+            <i data-lucide="redo-2" style="width: 14px; height: 14px;"></i>
+          </button>
+        </div>
+
+        <div class="separator-vertical"></div>
+
+        <div class="nav-actions">
+          <button id="btn-duplicate" class="icon-btn" title="Duplicate">
+            <i data-lucide="copy" style="width: 14px; height: 14px;"></i>
+          </button>
+          <button id="btn-lock" class="icon-btn" title="Lock/Unlock">
+            <i data-lucide="lock" style="width: 14px; height: 14px;"></i>
           </button>
         </div>
 
         <!-- Zoom Controls (Moved to Navbar) -->
-        <div class="zoom-toolbar-nav"
-          style="display: flex; align-items: center; gap: 8px; background: var(--bg-tertiary); padding: 4px 8px; border-radius: 6px;">
-          <button id="btn-zoom-out" class="icon-btn" title="Zoom Out" style="width: 28px; height: 28px;">
-            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none"
-              stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-lucide="minus"
-              class="lucide lucide-minus lucide-layout-grid" style="width: 14px; height: 14px;">
-              <path d="M5 12h14"></path>
-            </svg>
+        <div class="zoom-toolbar-nav zoom-controls-wrapper">
+          <button id="btn-draw-mode" class="icon-btn" title="Free Drawing" style="width: 28px; height: 28px;">
+            <i data-lucide="pencil" style="width: 14px; height: 14px;"></i>
           </button>
-          <span id="zoom-level" style="font-size: 0.85rem; width: 45px; text-align: center;">100%</span>
+          <div class="separator-vertical"></div>
+          <button id="btn-hand-tool" class="icon-btn" title="Hand Tool (Space)" style="width: 28px; height: 28px;">
+            <i data-lucide="hand" style="width: 14px; height: 14px;"></i>
+          </button>
+          <div class="separator-vertical"></div>
+          <button id="btn-zoom-out" class="icon-btn" title="Zoom Out" style="width: 28px; height: 28px;">
+            <i data-lucide="minus" style="width: 14px; height: 14px;"></i>
+          </button>
+          <span id="zoom-level" class="zoom-level-text">100%</span>
           <button id="btn-zoom-in" class="icon-btn" title="Zoom In" style="width: 28px; height: 28px;">
-            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none"
-              stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-lucide="plus"
-              class="lucide lucide-plus lucide-layout-grid" style="width: 14px; height: 14px;">
-              <path d="M5 12h14">
-                <path d="M12 5v14"></path>
-            </svg>
+            <i data-lucide="plus" style="width: 14px; height: 14px;"></i>
           </button>
           <button id="btn-zoom-reset" class="icon-btn" title="Reset Zoom" style="width: 28px; height: 28px;">
-            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none"
-              stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-              data-lucide="maximize" class="lucide lucide-maximize lucide-layout-grid"
-              style="width: 14px; height: 14px;">
-              <path d="M8 3H5a2 2 0 0 0-2 2v3"></path>
-              <path d="M21 8V5a2 2 0 0 0-2-2h-3"></path>
-              <path d="M3 16v3a2 2 0 0 0 2 2h3"></path>
-              <path d="M16 21h3a2 2 0 0 0 2-2v-3"></path>
-            </svg>
+            <i data-lucide="maximize" style="width: 14px; height: 14px;"></i>
           </button>
         </div>
       </div>
 
-      <div class="nav-right" style="display: flex; gap: 10px;">
+      <div class="nav-right nav-right-group">
+        <!-- View Options -->
+        <div class="input-group" style="flex-direction: row; align-items: center; gap: 8px; margin-right: 12px;">
+          <button id="btn-toggle-rulers" class="icon-btn active" title="Toggle Rulers">
+            <i data-lucide="ruler"></i>
+          </button>
+          <button id="btn-toggle-grid" class="icon-btn" title="Toggle Grid">
+            <i data-lucide="grid-3x3"></i>
+          </button>
+        </div>
+
         <button id="btn-save-project" class="btn btn-sm" title="Save Project">
-          <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none"
-            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-lucide="save"
-            class="lucide lucide-save lucide-layout-grid">
-            <path
-              d="M15.2 3a2 2 0 0 1 1.4.6l3.8 3.8a2 2 0 0 1 .6 1.4V19a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2z">
-            </path>
-            <path d="M17 21v-7a1 1 0 0 0-1-1H8a1 1 0 0 0-1 1v7"></path>
-            <path d="M7 3v4a1 1 0 0 0 1 1h7"></path>
-          </svg>
+          <i data-lucide="save" style="width: 14px; height: 14px;"></i>
           <span>Save</span>
         </button>
         <button id="btn-load-project" class="btn btn-sm" title="Load Project">
-          <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none"
-            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-            data-lucide="folder-open" class="lucide lucide-folder-open lucide-layout-grid">
-            <path
-              d="m6 14 1.5-2.9A2 2 0 0 1 9.24 10H20a2 2 0 0 1 1.94 2.5l-1.54 6a2 2 0 0 1-1.95 1.5H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h3.9a2 2 0 0 1 1.69.9l.81 1.2a2 2 0 0 0 1.67.9H18a2 2 0 0 1 2 2v2">
-            </path>
-          </svg>
+          <i data-lucide="folder-open" style="width: 14px; height: 14px;"></i>
           <span>Load</span>
         </button>
         <input type="file" id="load-file-input" accept="application/json" class="hidden">
 
-        <div style="width: 1px; height: 24px; background: var(--border-color); margin: 0 4px;"></div>
+        <div class="separator-vertical-lg"></div>
 
         <button id="btn-navbar-export" class="btn btn-primary btn-sm">
-          <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none"
-            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-lucide="download"
-            class="lucide lucide-download lucide-layout-grid">
-            <path d="M12 15V3"></path>
-            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-            <path d="m7 10 5 5 5-5"></path>
-          </svg>
+          <i data-lucide="download" style="width: 14px; height: 14px;"></i>
           <span>Export</span>
         </button>
       </div>
@@ -149,36 +110,70 @@
     <div class="workspace">
       <!-- Left Sidebar: ASSETS ONLY -->
       <aside class="sidebar">
-        <div class="section">
-          <div class="section-title">Add Elements</div>
-          <div class="row" style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
-            <button id="btn-add-text" class="btn btn-element">
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M4 7V4h16v3M9 20h6M12 4v16" />
-              </svg>
-              <span>Text</span>
-            </button>
-            <button id="btn-add-image" class="btn btn-element">
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />
-                <circle cx="8.5" cy="8.5" r="1.5" />
-                <polyline points="21 15 16 10 5 21" />
-              </svg>
-              <span>Image</span>
-            </button>
-          </div>
-          <input type="file" id="file-input" class="hidden" accept="image/*">
+        <!-- New Tab Header -->
+        <div class="sidebar-tabs">
+          <button class="tab-btn active" data-target="elements-wrapper">Elements</button>
+          <button class="tab-btn" data-target="templates-wrapper">Templates</button>
         </div>
 
-        <!-- Dynamic Elements Library -->
-        <div id="elements-library-container"></div>
+        <!-- Elements Wrapper -->
+        <div id="elements-wrapper">
+          <div class="section">
+            <div class="section-title">Add Elements</div>
+            <div class="row sidebar-elements-grid">
+              <button id="btn-add-text" class="btn btn-element">
+                <i data-lucide="type" style="width: 24px; height: 24px;"></i>
+                <span>Text</span>
+              </button>
+              <button id="btn-add-image" class="btn btn-element">
+                <i data-lucide="image" style="width: 24px; height: 24px;"></i>
+                <span>Image</span>
+              </button>
+            </div>
+            <input type="file" id="file-input" class="hidden" accept="image/*">
+          </div>
+
+          <!-- Dynamic Elements Library -->
+          <div id="elements-library-container"></div>
+        </div>
+
+        <!-- Templates Wrapper -->
+        <div id="templates-wrapper" style="display: none;">
+          <div class="section-title">Templates</div>
+          <div id="templates-grid" class="templates-grid">
+            <!-- Injected by TemplatesPanel -->
+          </div>
+        </div>
       </aside>
 
-      <main class="canvas-area" id="canvas-wrapper">
-        <div class="canvas-container-wrapper">
-          <canvas id="c"></canvas>
+      <!-- Ruler Wrapper Layout -->
+      <div id="ruler-wrapper"
+        style="flex: 1; display: flex; flex-direction: column; overflow: hidden; position: relative;">
+        <!-- Horizontal Ruler Row -->
+        <div
+          style="height: 20px; display: flex; background: var(--bg-tertiary); z-index: 20; border-bottom: 1px solid var(--border-color); overflow: hidden;">
+          <div class="ruler-corner"
+            style="width: 20px; height: 20px; flex-shrink: 0; background: var(--bg-tertiary); border-right: 1px solid var(--border-color);">
+          </div>
+          <canvas id="ruler-h" style="flex: 1; height: 20px; cursor: ns-resize; display: block;"></canvas>
         </div>
-      </main>
+
+        <!-- Workspace Row -->
+        <div style="flex: 1; display: flex; overflow: hidden; position: relative;">
+          <!-- Vertical Ruler Column -->
+          <div
+            style="width: 20px; background: var(--bg-tertiary); z-index: 20; border-right: 1px solid var(--border-color); overflow: hidden;">
+            <canvas id="ruler-v" style="width: 20px; height: 100%; cursor: ew-resize; display: block;"></canvas>
+          </div>
+
+          <!-- Scrollable Canvas Area -->
+          <main class="canvas-area" id="canvas-wrapper" style="flex: 1; overflow: auto; position: relative;">
+            <div class="canvas-container-wrapper">
+              <canvas id="c"></canvas>
+            </div>
+          </main>
+        </div>
+      </div>
 
       <!-- Right Sidebar: PROPERTIES & LAYERS -->
       <aside class="sidebar-right">
@@ -188,8 +183,7 @@
 
         <!-- Background Controls (Always available if nothing selected, or if canvas selected) -->
         <div class="section" id="bg-controls-section">
-          <div class="section-header"
-            style="font-size: 0.8rem; font-weight: 600; color: var(--text-secondary); margin-bottom: 8px;">CANVAS
+          <div class="section-header bg-controls-header">CANVAS
             BACKGROUND</div>
           <select id="bg-type" style="margin-bottom: 8px;">
             <option value="solid">Solid Color</option>
@@ -200,8 +194,7 @@
           <div id="bg-solid-controls" class="input-group">
             <div class="input-group" style="position: relative;">
               <label>Color</label>
-              <div id="bg-color-swatch"
-                style="background: #ffffff; height: 36px; border-radius: 6px; cursor: pointer; border: 1px solid var(--border-color);">
+              <div id="bg-color-swatch" class="color-swatch" style="background: #ffffff;">
               </div>
               <!-- Popup Wrapper -->
               <div id="bg-color-picker-wrap" class="color-picker-popup">
@@ -235,145 +228,7 @@
 
         <!-- Selected Object Properties -->
         <div id="object-properties" style="display: flex; flex-direction: column; gap: 16px;">
-
-          <!-- Position & Size -->
-          <div class="section" id="pos-controls" style="display: none;">
-            <div class="section-header" style="font-size: 0.8rem; font-weight: 600; color: var(--text-secondary);">
-              TRANSFORM</div>
-
-            <div class="row">
-              <div class="input-group" style="flex:1;">
-                <label>X</label>
-                <input type="number" id="prop-x">
-              </div>
-              <div class="input-group" style="flex:1;">
-                <label>Y</label>
-                <input type="number" id="prop-y">
-              </div>
-            </div>
-            <div class="row">
-              <div class="input-group" style="flex:1;">
-                <label>W</label>
-                <input type="number" id="prop-w">
-              </div>
-              <div class="input-group" style="flex:1;">
-                <label>H</label>
-                <input type="number" id="prop-h">
-              </div>
-            </div>
-            <div class="row">
-              <div class="input-group" style="flex:1;">
-                <label>Rotate</label>
-                <input type="number" id="prop-angle">
-              </div>
-            </div>
-
-            <!-- Alignment Controls -->
-            <div class="input-group" style="margin-top: 8px;">
-              <label>Align</label>
-              <!-- Mix of Align to Page and Align Elements - Logic will need to handle which to show/enable -->
-              <div class="toolbar-row" id="align-controls-wrapper">
-                <button id="btn-page-left" class="icon-btn" title="Left"><i data-lucide="align-left"></i></button>
-                <button id="btn-page-center" class="icon-btn" title="Center"><i
-                    data-lucide="align-center-horizontal"></i></button>
-                <button id="btn-page-right" class="icon-btn" title="Right"><i data-lucide="align-right"></i></button>
-                <button id="btn-page-top" class="icon-btn" title="Top"><i
-                    data-lucide="align-vertical-justify-start"></i></button>
-                <button id="btn-page-middle" class="icon-btn" title="Middle"><i
-                    data-lucide="align-vertical-justify-center"></i></button>
-                <button id="btn-page-bottom" class="icon-btn" title="Bottom"><i
-                    data-lucide="align-vertical-justify-end"></i></button>
-              </div>
-            </div>
-
-            <!-- Layer & Flip -->
-            <div class="row" style="margin-top: 8px;">
-              <div class="input-group" style="flex:1;">
-                <label>Order</label>
-                <div class="toolbar-row">
-                  <button id="btn-layer-up" class="icon-btn" title="Bring Forward">↑</button>
-                  <button id="btn-layer-down" class="icon-btn" title="Send Backward">↓</button>
-                </div>
-              </div>
-              <div class="input-group" style="flex:1;">
-                <label>Flip</label>
-                <div class="toolbar-row">
-                  <button id="btn-flip-h" class="icon-btn" title="Flip Horizontal">⇄</button>
-                  <button id="btn-flip-v" class="icon-btn" title="Flip Vertical">⇅</button>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <!-- Text Controls -->
-          <div class="section" id="text-controls" style="display: none;">
-            <div class="section-header" style="font-size: 0.8rem; font-weight: 600; color: var(--text-secondary);">TEXT
-              STYLE</div>
-
-            <div class="input-group">
-              <label>Font</label>
-              <select id="font-family">
-                <option value="'Phetsarath OT', 'Noto Sans Lao', sans-serif" selected>Phetsarath OT</option>
-                <option value="Inter">Inter</option>
-                <option value="'Noto Sans Lao', sans-serif">Noto Sans Lao</option>
-                <option value="Arial">Arial</option>
-                <option value="Times New Roman">Times New Roman</option>
-                <option value="Courier New">Courier New</option>
-              </select>
-            </div>
-
-            <div class="row">
-              <div class="input-group" style="flex: 1;">
-                <label>Color</label>
-                <div id="text-color-swatch"
-                  style="background: #333333; height: 36px; border-radius: 6px; cursor: pointer; border: 1px solid var(--border-color);">
-                </div>
-                <div class="input-group" style="position: relative;">
-                  <div id="text-color-picker-wrap" class="color-picker-popup">
-                    <hex-color-picker id="text-color-picker"></hex-color-picker>
-                  </div>
-                </div>
-              </div>
-              <div class="input-group" style="flex: 1;">
-                <label>Size</label>
-                <input type="number" id="text-size" value="40">
-              </div>
-            </div>
-
-            <div class="toolbar-row">
-              <button id="btn-bold" class="icon-btn"><b>B</b></button>
-              <button id="btn-italic" class="icon-btn"><i>I</i></button>
-              <button id="btn-underline" class="icon-btn"><u>U</u></button>
-            </div>
-          </div>
-
-          <!-- Color Controls (Shape/Image) -->
-          <div class="section" id="color-controls" style="display: none;">
-            <div class="section-header" style="font-size: 0.8rem; font-weight: 600; color: var(--text-secondary);">
-              APPEARANCE</div>
-            <div class="input-group" style="flex: 1; position: relative;">
-              <label>Fill / Tint</label>
-              <div id="elem-color-swatch"
-                style="background: #000000; height: 36px; border-radius: 6px; cursor: pointer; border: 1px solid var(--border-color);">
-              </div>
-              <div id="elem-color-picker-wrap" class="color-picker-popup">
-                <hex-color-picker id="elem-color-picker"></hex-color-picker>
-              </div>
-            </div>
-          </div>
-
-          <!-- Object Actions -->
-          <div class="section" id="actions-controls" style="display: none;">
-            <div class="toolbar-row" style="justify-content: space-between;">
-              <button id="btn-duplicate" class="btn btn-sm" style="flex:1; justify-content: center;">
-                <i data-lucide="copy" style="width:14px;"></i> Dup
-              </button>
-              <button id="btn-lock" class="btn btn-sm" style="flex:1; justify-content: center;">
-                <i data-lucide="lock" style="width:14px;"></i> Lock
-              </button>
-            </div>
-          </div>
-
+          <!-- Content generated dynamically by PropertyPanel.js -->
         </div>
 
 
@@ -391,10 +246,9 @@
       </aside>
 
       <!-- Export Modal (Overlay) - To be implemented via JS toggling usually, but for now we'll put it in a hidden container or dialog -->
-      <dialog id="export-dialog"
-        style="border: 1px solid var(--border-color); background: var(--bg-secondary); color: var(--text-primary); padding: 20px; border-radius: 12px; backdrop-filter: blur(10px); width: 300px; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 1000;">
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-          <h3 style="margin: 0;">Export Design</h3>
+      <dialog id="export-dialog" class="export-dialog">
+        <div class="export-header">
+          <h3>Export Design</h3>
           <button id="btn-close-export" class="icon-btn" style="border:none;"><i data-lucide="x"></i></button>
         </div>
 
@@ -409,11 +263,14 @@
           <div class="input-group">
             <label>Format</label>
             <div class="row">
-              <label class="radio-label" style="display: flex; align-items: center; gap: 6px; cursor: pointer;">
+              <label class="radio-label">
                 <input type="radio" name="export-format" value="png" checked> PNG
               </label>
-              <label class="radio-label" style="display: flex; align-items: center; gap: 6px; cursor: pointer;">
+              <label class="radio-label">
                 <input type="radio" name="export-format" value="pdf"> PDF
+              </label>
+              <label class="radio-label">
+                <input type="radio" name="export-format" value="svg"> SVG
               </label>
             </div>
           </div>
@@ -434,6 +291,36 @@
         <div class="section" style="margin-top: 20px;">
           <button id="btn-do-export" class="btn btn-primary" style="width: 100%; justify-content: center;">
             Download
+          </button>
+        </div>
+      </dialog>
+
+      <!-- Resize Modal -->
+      <dialog id="resize-dialog" class="export-dialog">
+        <div class="export-header">
+          <h3>Resize Canvas</h3>
+          <button id="btn-close-resize" class="icon-btn" style="border:none;"><i data-lucide="x"></i></button>
+        </div>
+
+        <div class="section">
+          <div class="row">
+            <div class="input-group" style="flex: 1;">
+              <label>Width</label>
+              <input type="number" id="resize-w" value="800">
+            </div>
+            <div class="input-group" style="flex: 0; display: flex; align-items: center; padding-top: 24px;">
+              <span style="color: var(--text-secondary);">x</span>
+            </div>
+            <div class="input-group" style="flex: 1;">
+              <label>Height</label>
+              <input type="number" id="resize-h" value="600">
+            </div>
+          </div>
+        </div>
+
+        <div class="section" style="margin-top: 20px;">
+          <button id="btn-apply-resize" class="btn btn-primary" style="width: 100%; justify-content: center;">
+            Apply
           </button>
         </div>
       </dialog>

@@ -1,10 +1,14 @@
+import { createIcons, icons } from 'lucide';
+
 // State
 let allTemplates = [];
 let activeCategory = 'all';
 let searchQuery = '';
 
 async function loadTemplates() {
+    createIcons({ icons }); // Init icons immediately
     try {
+
         let response = await fetch('data/templates.json');
         if (!response.ok) {
             // Fallback: try pointing to public folder (for raw source deployments)

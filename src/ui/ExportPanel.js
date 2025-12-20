@@ -59,13 +59,25 @@ export class ExportPanel {
                 if (format === 'png') {
                     this.cm.exportToImage(filename, quality);
                     NotificationManager.success('Exporting PNG...');
+                } else if (format === 'svg') {
+                    this.cm.exportToSVG(filename);
+                    NotificationManager.success('Exporting SVG...');
                 } else if (format === 'pdf') {
                     try {
-                        const canvas = this.cm.canvas;
-                        const w = canvas.width;
-                        const h = canvas.height;
+                        // PDF dimensions should match Logical dimensions (cm.originalWidth/Height)
+                        const w = this.cm.originalWidth;
+                        const h = this.cm.originalHeight;
+
+                        // Get high-res image data (independent of zoom)
                         const imgData = this.cm.getCanvasDataURL(quality);
-                        const pdf = new jsPDF({ orientation: w > h ? 'l' : 'p', unit: 'px', format: [w, h] });
+
+                        // Init PDF with correct size
+                        const pdf = new jsPDF({
+                            orientation: w > h ? 'l' : 'p',
+                            unit: 'px',
+                            format: [w, h]
+                        });
+
                         pdf.addImage(imgData, 'PNG', 0, 0, w, h);
                         pdf.save(`${filename}.pdf`);
                         NotificationManager.success('Exporting PDF...');
