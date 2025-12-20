@@ -33,6 +33,72 @@
                     "height": 100,
                     "fill": "#000000"
                 }
+            },
+            {
+                "type": "shape",
+                "icon": "./elements/shape_star.svg",
+                "label": "Star",
+                "shapeType": "star",
+                "options": {
+                    "width": 100,
+                    "height": 100,
+                    "fill": "#000000"
+                }
+            },
+            {
+                "type": "shape",
+                "icon": "./elements/shape_heart.svg",
+                "label": "Heart",
+                "shapeType": "heart",
+                "options": {
+                    "width": 100,
+                    "height": 100,
+                    "fill": "#000000"
+                }
+            },
+            {
+                "type": "shape",
+                "icon": "./elements/shape_arrow_right.svg",
+                "label": "Arrow",
+                "shapeType": "arrow",
+                "options": {
+                    "width": 100,
+                    "height": 100,
+                    "fill": "#000000"
+                }
+            },
+            {
+                "type": "shape",
+                "icon": "./elements/shape_pentagon.svg",
+                "label": "Pentagon",
+                "shapeType": "pentagon",
+                "options": {
+                    "width": 100,
+                    "height": 100,
+                    "fill": "#000000"
+                }
+            },
+            {
+                "type": "shape",
+                "icon": "./elements/shape_hexagon.svg",
+                "label": "Hexagon",
+                "shapeType": "hexagon",
+                "options": {
+                    "width": 100,
+                    "height": 100,
+                    "fill": "#000000"
+                }
+            },
+            {
+                "type": "shape",
+                "icon": "./elements/shape_chat_bubble.svg",
+                "label": "Chat Bubble",
+                "shapeType": "message_box",
+                "options": {
+                    "width": 100,
+                    "height": 100,
+                    "fill": "#000000"
+                }
             }
         ]
     },
@@ -41,15 +107,381 @@
         "items": [
             {
                 "type": "svg",
-                "icon": "./elements/star-full-icon.svg",
-                "label": "Star Icon",
-                "src": "./elements/star-full-icon.svg"
+                "icon": "./elements/border_01.svg",
+                "label": "Border 01",
+                "src": "./elements/border_01.svg",
+                "options": {
+                    "fill": "#000000"
+                }
             },
             {
                 "type": "svg",
-                "icon": "./elements/radio_button_checked.svg",
-                "label": "Radio Button Checked",
-                "src": "./elements/radio_button_checked.svg"
+                "icon": "./elements/border_02.svg",
+                "label": "Border 02",
+                "src": "./elements/border_02.svg",
+                "options": {
+                    "fill": "#000000"
+                }
+            },
+            {
+                "type": "svg",
+                "icon": "./elements/border_03.svg",
+                "label": "Border 03",
+                "src": "./elements/border_03.svg",
+                "options": {
+                    "fill": "#000000"
+                }
+            },
+            {
+                "type": "svg",
+                "icon": "./elements/border_04.svg",
+                "label": "Border 04",
+                "src": "./elements/border_04.svg",
+                "options": {
+                    "fill": "#000000"
+                }
+            },
+            {
+                "type": "svg",
+                "icon": "./elements/border_05.svg",
+                "label": "Border 05",
+                "src": "./elements/border_05.svg",
+                "options": {
+                    "fill": "#000000"
+                }
+            },
+            {
+                "type": "svg",
+                "icon": "./elements/border_06.svg",
+                "label": "Border 06",
+                "src": "./elements/border_06.svg",
+                "options": {
+                    "fill": "#000000"
+                }
+            },
+            {
+                "type": "svg",
+                "icon": "./elements/border_07.svg",
+                "label": "Border 07",
+                "src": "./elements/border_07.svg",
+                "options": {
+                    "fill": "#000000"
+                }
+            },
+            {
+                "type": "svg",
+                "icon": "./elements/border_08.svg",
+                "label": "Border 08",
+                "src": "./elements/border_08.svg",
+                "options": {
+                    "fill": "#000000"
+                }
+            },
+            {
+                "type": "svg",
+                "icon": "./elements/border_09.svg",
+                "label": "Border 09",
+                "src": "./elements/border_09.svg",
+                "options": {
+                    "fill": "#000000"
+                }
+            },
+            {
+                "type": "svg",
+                "icon": "./elements/border_10.svg",
+                "label": "Border 10",
+                "src": "./elements/border_10.svg",
+                "options": {
+                    "fill": "#000000"
+                }
+            },
+            {
+                "type": "svg",
+                "icon": "./elements/border_11.svg",
+                "label": "Border 11",
+                "src": "./elements/border_11.svg",
+                "options": {
+                    "fill": "#000000"
+                }
+            },
+            {
+                "type": "svg",
+                "icon": "./elements/border_12.svg",
+                "label": "Border 12",
+                "src": "./elements/border_12.svg",
+                "options": {
+                    "fill": "#000000"
+                }
+            },
+            {
+                "type": "svg",
+                "icon": "./elements/border_13.svg",
+                "label": "Border 13",
+                "src": "./elements/border_13.svg",
+                "options": {
+                    "fill": "#000000"
+                }
+            },
+            {
+                "type": "svg",
+                "icon": "./elements/border_14.svg",
+                "label": "Border 14",
+                "src": "./elements/border_14.svg",
+                "options": {
+                    "fill": "#000000"
+                }
+            },
+            {
+                "type": "svg",
+                "icon": "./elements/border_15.svg",
+                "label": "Border 15",
+                "src": "./elements/border_15.svg",
+                "options": {
+                    "fill": "#000000"
+                }
+            },
+            {
+                "type": "svg",
+                "icon": "./elements/border_16.svg",
+                "label": "Border 16",
+                "src": "./elements/border_16.svg",
+                "options": {
+                    "fill": "#000000"
+                }
+            },
+            {
+                "type": "svg",
+                "icon": "./elements/border_17.svg",
+                "label": "Border 17",
+                "src": "./elements/border_17.svg",
+                "options": {
+                    "fill": "#000000"
+                }
+            },
+            {
+                "type": "svg",
+                "icon": "./elements/border_18.svg",
+                "label": "Border 18",
+                "src": "./elements/border_18.svg",
+                "options": {
+                    "fill": "#000000"
+                }
+            },
+            {
+                "type": "svg",
+                "icon": "./elements/border_19.svg",
+                "label": "Border 19",
+                "src": "./elements/border_19.svg",
+                "options": {
+                    "fill": "#000000"
+                }
+            },
+            {
+                "type": "svg",
+                "icon": "./elements/border_20.svg",
+                "label": "Border 20",
+                "src": "./elements/border_20.svg",
+                "options": {
+                    "fill": "#000000"
+                }
+            },
+            {
+                "type": "svg",
+                "icon": "./elements/border_21.svg",
+                "label": "Border 21",
+                "src": "./elements/border_21.svg",
+                "options": {
+                    "fill": "#000000"
+                }
+            },
+            {
+                "type": "svg",
+                "icon": "./elements/border_22.svg",
+                "label": "Border 22",
+                "src": "./elements/border_22.svg",
+                "options": {
+                    "fill": "#000000"
+                }
+            },
+            {
+                "type": "svg",
+                "icon": "./elements/border_23.svg",
+                "label": "Border 23",
+                "src": "./elements/border_23.svg",
+                "options": {
+                    "fill": "#000000"
+                }
+            },
+            {
+                "type": "svg",
+                "icon": "./elements/border_24.svg",
+                "label": "Border 24",
+                "src": "./elements/border_24.svg",
+                "options": {
+                    "fill": "#000000"
+                }
+            },
+            {
+                "type": "svg",
+                "icon": "./elements/line_01.svg",
+                "label": "Line 01",
+                "src": "./elements/line_01.svg",
+                "options": {
+                    "fill": "#000000"
+                }
+            },
+            {
+                "type": "svg",
+                "icon": "./elements/line_02.svg",
+                "label": "Line 02",
+                "src": "./elements/line_02.svg",
+                "options": {
+                    "fill": "#000000"
+                }
+            },
+            {
+                "type": "svg",
+                "icon": "./elements/line_03.svg",
+                "label": "Line 03",
+                "src": "./elements/line_03.svg",
+                "options": {
+                    "fill": "#000000"
+                }
+            },
+            {
+                "type": "svg",
+                "icon": "./elements/line_04.svg",
+                "label": "Line 04",
+                "src": "./elements/line_04.svg",
+                "options": {
+                    "fill": "#000000"
+                }
+            },
+            {
+                "type": "svg",
+                "icon": "./elements/line_05.svg",
+                "label": "Line 05",
+                "src": "./elements/line_05.svg",
+                "options": {
+                    "fill": "#000000"
+                }
+            },
+            {
+                "type": "svg",
+                "icon": "./elements/line_06.svg",
+                "label": "Line 06",
+                "src": "./elements/line_06.svg",
+                "options": {
+                    "fill": "#000000"
+                }
+            },
+            {
+                "type": "svg",
+                "icon": "./elements/line_07.svg",
+                "label": "Line 07",
+                "src": "./elements/line_07.svg",
+                "options": {
+                    "fill": "#000000"
+                }
+            },
+            {
+                "type": "svg",
+                "icon": "./elements/line_08.svg",
+                "label": "Line 08",
+                "src": "./elements/line_08.svg",
+                "options": {
+                    "fill": "#000000"
+                }
+            },
+            {
+                "type": "svg",
+                "icon": "./elements/line_09.svg",
+                "label": "Line 09",
+                "src": "./elements/line_09.svg",
+                "options": {
+                    "fill": "#000000"
+                }
+            },
+            {
+                "type": "svg",
+                "icon": "./elements/line_10.svg",
+                "label": "Line 10",
+                "src": "./elements/line_10.svg",
+                "options": {
+                    "fill": "#000000"
+                }
+            },
+            {
+                "type": "svg",
+                "icon": "./elements/line_11.svg",
+                "label": "Line 11",
+                "src": "./elements/line_11.svg",
+                "options": {
+                    "fill": "#000000"
+                }
+            },
+            {
+                "type": "svg",
+                "icon": "./elements/line_12.svg",
+                "label": "Line 12",
+                "src": "./elements/line_12.svg",
+                "options": {
+                    "fill": "#000000"
+                }
+            },
+            {
+                "type": "svg",
+                "icon": "./elements/line_13.svg",
+                "label": "Line 13",
+                "src": "./elements/line_13.svg",
+                "options": {
+                    "fill": "#000000"
+                }
+            },
+            {
+                "type": "svg",
+                "icon": "./elements/line_14.svg",
+                "label": "Line 14",
+                "src": "./elements/line_14.svg",
+                "options": {
+                    "fill": "#000000"
+                }
+            },
+            {
+                "type": "svg",
+                "icon": "./elements/line_15.svg",
+                "label": "Line 15",
+                "src": "./elements/line_15.svg",
+                "options": {
+                    "fill": "#000000"
+                }
+            },
+            {
+                "type": "svg",
+                "icon": "./elements/line_16.svg",
+                "label": "Line 16",
+                "src": "./elements/line_16.svg",
+                "options": {
+                    "fill": "#000000"
+                }
+            },
+            {
+                "type": "svg",
+                "icon": "./elements/line_17.svg",
+                "label": "Line 17",
+                "src": "./elements/line_17.svg",
+                "options": {
+                    "fill": "#000000"
+                }
+            },
+            {
+                "type": "svg",
+                "icon": "./elements/line_18.svg",
+                "label": "Line 18",
+                "src": "./elements/line_18.svg",
+                "options": {
+                    "fill": "#000000"
+                }
             }
         ]
     },
@@ -58,9 +490,51 @@
         "items": [
             {
                 "type": "image",
-                "icon": "./elements/star-full-icon.svg",
-                "label": "Placeholder Icon",
-                "src": "./elements/star-full-icon.svg"
+                "icon": "./elements/ltvc-logo.png",
+                "label": "LTVC Logo",
+                "src": "./elements/ltvc-logo.png"
+            },
+            {
+                "type": "image",
+                "icon": "./elements/ມາກເລນິນ.png",
+                "label": "ມາກເລນິນ",
+                "src": "./elements/ມາກເລນິນ.png"
+            },
+            {
+                "type": "image",
+                "icon": "./elements/ທ່ານໄກສອນ.jpg",
+                "label": "ທ່ານໄກສອນ",
+                "src": "./elements/ທ່ານໄກສອນ.jpg"
+            },
+            {
+                "type": "image",
+                "icon": "./elements/ກາຊາດ_lao.png",
+                "label": "ກາຊາດ",
+                "src": "./elements/ກາຊາດ_lao.png"
+            },
+            {
+                "type": "image",
+                "icon": "./elements/ທູງຊາດທູງພັກ_flag.png",
+                "label": "ທູງຊາດທູງພັກ",
+                "src": "./elements/ທູງຊາດທູງພັກ_flag.png"
+            },
+            {
+                "type": "image",
+                "icon": "./elements/ຊາວໜູ່ມ_flag.png",
+                "label": "ຊາວໜູ່ມ",
+                "src": "./elements/ຊາວໜູ່ມ_flag.png"
+            },
+            {
+                "type": "image",
+                "icon": "./elements/ແມ່ຍິງ_flag.png",
+                "label": "ແມ່ຍິງ",
+                "src": "./elements/ແມ່ຍິງ_flag.png"
+            },
+            {
+                "type": "image",
+                "icon": "./elements/ກະຊວງສຶກສາ_logo.png",
+                "label": "ກະຊວງສຶກສາ",
+                "src": "./elements/ກະຊວງສຶກສາ_logo.png"
             }
         ]
     }
