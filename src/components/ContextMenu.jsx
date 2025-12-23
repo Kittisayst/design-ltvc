@@ -34,15 +34,27 @@ export function ContextMenu() { // No props needed
                 } else {
                     setVisible(false);
                 }
-            } else {
-                // ...
+            }
+        };
+
+        const onCustomContextMenu = (e) => {
+            const { target, x, y } = e.detail;
+            if (target) {
+                // Ensure it's selected (LayersPanel usually selects it first)
+                canvasManager.canvas.setActiveObject(target);
+                canvasManager.canvas.requestRenderAll();
+                setActiveObject(target);
+                setPosition({ x, y });
+                setVisible(true);
             }
         };
 
         document.addEventListener('contextmenu', onContextMenu);
+        document.addEventListener('canvas:contextmenu', onCustomContextMenu);
 
         return () => {
             document.removeEventListener('contextmenu', onContextMenu);
+            document.removeEventListener('canvas:contextmenu', onCustomContextMenu);
         };
     }, [canvasManager]);
 
@@ -55,12 +67,42 @@ export function ContextMenu() { // No props needed
 
         if (visible) {
             document.addEventListener('mousedown', handleClickOutside);
+
+            // Boundary detection
+            if (menuRef.current) {
+                const menu = menuRef.current;
+                const rect = menu.getBoundingClientRect();
+                const viewportWidth = window.innerWidth;
+                const viewportHeight = window.innerHeight;
+
+                let { x, y } = position;
+
+                // Check bottom edge
+                if (y + rect.height > viewportHeight) {
+                    y = viewportHeight - rect.height - 10;
+                }
+
+                // Check right edge
+                if (x + rect.width > viewportWidth) {
+                    x = viewportWidth - rect.width - 10;
+                }
+
+                // Check top edge
+                if (y < 0) y = 10;
+
+                // Check left edge
+                if (x < 0) x = 10;
+
+                // Apply corrected position
+                menu.style.top = `${y}px`;
+                menu.style.left = `${x}px`;
+            }
         }
 
         return () => {
             document.removeEventListener('mousedown', handleClickOutside);
         };
-    }, [visible]);
+    }, [visible, position]);
 
     const handleAction = async (action) => {
         if (!canvasManager) return;
@@ -123,7 +165,7 @@ export function ContextMenu() { // No props needed
 
     const isLocked = activeObject?.lockMovementX;
     const isGroup = activeObject?.type === 'group';
-    const isSelection = activeObject?.type === 'activeSelection';
+    const isSelection = activeObject?.type === 'activeSelection' || activeObject?.type === 'activeselection';
     const isImage = activeObject && (activeObject.type === 'image' || activeObject.type === 'fabric-image');
 
     return (

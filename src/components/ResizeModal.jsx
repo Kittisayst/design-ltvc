@@ -7,6 +7,15 @@ export function ResizeModal({ isOpen, onClose, onApply, currentWidth, currentHei
     const [unit, setUnit] = useState(() => localStorage.getItem('canvas-unit') || 'px');
     const [width, setWidth] = useState(currentWidth);
     const [height, setHeight] = useState(currentHeight);
+    const [sizeTemplates, setSizeTemplates] = useState([]);
+
+    // Fetch Size Templates
+    useEffect(() => {
+        fetch('data/size_templates.json')
+            .then(res => res.json())
+            .then(data => setSizeTemplates(data))
+            .catch(err => console.error('Failed to load size templates:', err));
+    }, []);
 
     // Sync with external changes when modal opens
     useEffect(() => {
@@ -69,6 +78,37 @@ export function ResizeModal({ isOpen, onClose, onApply, currentWidth, currentHei
                 </div>
 
                 <div className="modal-body" style={{ display: 'flex', flexDirection: 'column', gap: '20px', padding: '10px 0' }}>
+
+                    {/* Size Templates */}
+                    <div className="input-group">
+                        <label style={{ marginBottom: '8px', display: 'block', fontWeight: '500' }}>Size Templates</label>
+                        <select
+                            onChange={(e) => {
+                                const [w, h, u] = e.target.value.split(',');
+                                if (w && h) {
+                                    // Directly set new values without conversion logic
+                                    setUnit(u);
+                                    localStorage.setItem('canvas-unit', u);
+                                    setWidth(parseFloat(w));
+                                    setHeight(parseFloat(h));
+                                }
+                            }}
+                            style={{ height: '44px', cursor: 'pointer', width: '100%' }}
+                            defaultValue=""
+                        >
+                            <option value="">Custom Size</option>
+                            {sizeTemplates.map((category, catIndex) => (
+                                <optgroup key={catIndex} label={category.category}>
+                                    {category.items.map((item, itemIndex) => (
+                                        <option key={itemIndex} value={`${item.width},${item.height},${item.unit}`}>
+                                            {item.label} ({item.width} x {item.height} {item.unit})
+                                        </option>
+                                    ))}
+                                </optgroup>
+                            ))}
+                        </select>
+                    </div>
+
                     <div className="input-group">
                         <label style={{ marginBottom: '8px', display: 'block', fontWeight: '500' }}>Measurement Unit</label>
                         <select

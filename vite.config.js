@@ -17,7 +17,10 @@ export default defineConfig({
         global: 'window',
     },
     optimizeDeps: {
-        include: ['upscaler', '@tensorflow/tfjs'],
-        exclude: ['@imgly/background-removal', 'onnxruntime-web']
+        include: [
+            'upscaler',
+            '@tensorflow/tfjs',
+            '@mediapipe/tasks-vision'
+        ]
     }
 })

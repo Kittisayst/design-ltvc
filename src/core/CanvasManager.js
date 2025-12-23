@@ -1,10 +1,11 @@
-import { Canvas, Gradient, Rect, util, PencilBrush, FabricImage, ActiveSelection, loadSVGFromString } from 'fabric';
+import { Canvas, Gradient, Rect, util, PencilBrush, FabricImage, ActiveSelection, loadSVGFromString, IText } from 'fabric';
 import { jsPDF } from 'jspdf';
 import { getCropControls } from './CropControls.js';
 // ... imports
 
 
 import { NotificationManager } from './NotificationManager.js';
+import TextExtractionService from '../services/TextExtractionService.js';
 import { CanvasViewport } from './CanvasViewport.js';
 import { CanvasEvents } from './CanvasEvents.js';
 import { LayoutManager } from './LayoutManager.js';
@@ -26,6 +27,7 @@ export class CanvasManager {
             width: 800,
             height: 600,
             backgroundColor: '#18191b', // Dark background for infinite canvas
+            preserveObjectStacking: true,
             ...options
         });
 
@@ -58,6 +60,154 @@ export class CanvasManager {
 
         // Initial Fit (delegated to viewport)
         setTimeout(() => this.fitToScreen(), 100);
+
+        // Smart Frames (Drag & Drop Image into Shape)
+        this.initSmartFrames();
+    }
+
+    initSmartFrames() {
+        if (!this.canvas) return;
+
+        // Highlight shape when dragging image over it
+        this.canvas.on('object:moving', (e) => {
+            const active = e.target;
+            if (!active || (active.type !== 'image' && active.type !== 'fabric-image')) return;
+
+            // Reset previous highlights
+            this.canvas.getObjects().forEach(obj => {
+                if (obj.isSmartFrameHighlight) {
+                    obj.set('opacity', obj.originalOpacity || 1);
+                    obj.set('stroke', obj.originalStroke || null);
+                    obj.set('strokeWidth', obj.originalStrokeWidth || 0);
+                    delete obj.isSmartFrameHighlight;
+                }
+            });
+
+            // Find overlapping shape
+            const shapes = this.canvas.getObjects().filter(obj =>
+                ['rect', 'circle', 'triangle', 'polygon', 'path'].includes(obj.type) &&
+                obj !== active &&
+                obj !== this.workspace &&
+                obj.visible
+            );
+
+            const activeCenter = active.getCenterPoint();
+            const hitShape = shapes.find(shape => shape.containsPoint(activeCenter));
+
+            if (hitShape) {
+                // Highlight
+                if (!hitShape.isSmartFrameHighlight) {
+                    hitShape.originalOpacity = hitShape.opacity;
+                    hitShape.originalStroke = hitShape.stroke;
+                    hitShape.originalStrokeWidth = hitShape.strokeWidth;
+
+                    hitShape.isSmartFrameHighlight = true;
+                    hitShape.set({
+                        opacity: 0.8,
+                        stroke: '#3498db',
+                        strokeWidth: 3
+                    });
+                    this.canvas.requestRenderAll();
+                }
+            }
+        });
+
+        // Apply ClipPath on drop
+        this.canvas.on('object:modified', (e) => {
+            const active = e.target;
+            // Only trigger if it was a move action (not scale/rotate)
+            if (e.action !== 'drag' || !active || (active.type !== 'image' && active.type !== 'fabric-image')) return;
+
+            // Check if we dropped onto a highlighted smart frame
+            const shapes = this.canvas.getObjects();
+            const targetShape = shapes.find(obj => obj.isSmartFrameHighlight);
+
+            if (targetShape) {
+                // Restore shape style first
+                targetShape.set({
+                    opacity: targetShape.originalOpacity || 1,
+                    stroke: targetShape.originalStroke || null,
+                    strokeWidth: targetShape.originalStrokeWidth || 0
+                });
+                delete targetShape.isSmartFrameHighlight;
+
+                // CONFIRMATION (Optional, but good for UX)
+                // For now, auto-apply
+                this.clipImageToShape(active, targetShape);
+            }
+        });
+    }
+
+    async clipImageToShape(img, shape) {
+        if (!img || !shape) return;
+
+        try {
+            // 1. Clone the shape to serve as the ClipPath
+            const clipPath = await shape.clone();
+
+            // 2. Configure ClipPath to be RELATIVE (moves with image)
+            // Note: We will adjust scale/position relative to the image later
+            clipPath.set({
+                absolutePositioned: false,
+                originX: 'center',
+                originY: 'center',
+                left: 0,
+                top: 0,
+                strokeWidth: 0,
+                stroke: null,
+                opacity: 1,
+                fill: 'black'
+            });
+
+            // 3. Center Image on Shape
+            const shapeCenter = shape.getCenterPoint();
+
+            // Calculate scale to cover (Aspect Fill)
+            const imgRatio = img.width / img.height;
+            const shapeRatio = shape.width / shape.height; // Rough approximation for bounding box
+
+            // Getting precise aspect fill for arbitrary shapes is complex, 
+            // but matching bounding box is a good start.
+            let scaleX = shape.width * shape.scaleX / img.width;
+            let scaleY = shape.height * shape.scaleY / img.height;
+            let scale = Math.max(scaleX, scaleY);
+
+            img.set({
+                scaleX: scale,
+                scaleY: scale,
+                left: shapeCenter.x,
+                top: shapeCenter.y,
+                originY: 'center',
+                angle: 0
+            });
+            img.setCoords();
+
+            // 4. Calculate relative scale for the clipPath
+            // clipScale = shapeScale / imgScale
+            const relativeScaleX = shape.scaleX / img.scaleX;
+            const relativeScaleY = shape.scaleY / img.scaleY;
+            const relativeAngle = shape.angle - img.angle;
+
+            clipPath.set({
+                scaleX: relativeScaleX,
+                scaleY: relativeScaleY,
+                angle: relativeAngle
+            });
+
+            // 5. Apply ClipPath
+            img.set('clipPath', clipPath);
+            img.set('dirty', true);
+
+            // 6. Remove original shape
+            this.canvas.remove(shape);
+
+            this.canvas.requestRenderAll();
+            this.historyManager.saveState('Smart Frame');
+            NotificationManager.success("Image snapped to frame!");
+
+        } catch (err) {
+            console.error("Smart Frame operations failed:", err);
+        }
     }
 
     dispose() {
@@ -379,7 +529,6 @@ export class CanvasManager {
             this.canvas.requestRenderAll();
         } catch (err) {
             console.error('Failed to replace image:', err);
-            throw err;
         }
     }
 
@@ -601,7 +750,7 @@ export class CanvasManager {
 
     // --- PROFESSIONAL EXPORT SYSTEM ---
     async exportImage(options = {}) {
-        const { format = 'png', filename = 'design', quality = 1 } = options;
+        const { format = 'png', filename = 'design', quality = 1, multiplier = 2 } = options;
 
         // Temporarily hide workspace border/guides
         const originalStroke = this.workspace.stroke;
@@ -611,6 +760,7 @@ export class CanvasManager {
         const guides = this.canvas.getObjects().filter(obj => obj.excludeFromExport);
         guides.forEach(g => g.set({ opacity: 0 }));
 
+        // Save and Reset Viewport Logic
         const originalVPT = this.canvas.viewportTransform.slice();
         this.canvas.setViewportTransform([1, 0, 0, 1, 0, 0]);
 
@@ -618,7 +768,7 @@ export class CanvasManager {
             if (format === 'pdf') {
                 const dataURL = this.canvas.toDataURL({
                     format: 'png',
-                    multiplier: quality,
+                    multiplier: multiplier,
                     left: 0,
                     top: 0,
                     width: this.originalWidth,
@@ -635,59 +785,12 @@ export class CanvasManager {
                 pdf.addImage(dataURL, 'PNG', 0, 0, this.originalWidth, this.originalHeight);
                 pdf.save(`${filename}.pdf`);
             } else if (format === 'json') {
-                // Generate Thumbnail (small size)
-                const thumbnail = this.canvas.toDataURL({
-                    format: 'jpeg',
-                    quality: 0.8,
-                    multiplier: 0.2, // 20% size
-                    left: 0,
-                    top: 0,
-                    width: this.originalWidth,
-                    height: this.originalHeight,
-                    enableRetinaScaling: false
-                });
-
-                // Get Canvas Data
-                // Include custom properties
-                const json = this.canvas.toJSON(['name', 'id', 'selectable', 'evented', 'subTargetCheck', 'interactive', 'lockMovementX', 'lockMovementY', 'lockScalingX', 'lockScalingY', 'lockRotation']);
-
-                // Inject Thumbnail
-                json.thumbnail = thumbnail;
-
-                // Make URLs dynamic (relative)
-                // Traverse objects and strip origin from src
-                const sanitizeUrl = (url) => {
-                    if (typeof url === 'string' && url.startsWith(window.location.origin)) {
-                        return url.replace(window.location.origin, '');
-                    }
-                    return url;
-                };
-
-                const processObjects = (objects) => {
-                    objects.forEach(obj => {
-                        if (obj.src) {
-                            obj.src = sanitizeUrl(obj.src);
-                        }
-                        if (obj.objects) { // Recursive for groups
-                            processObjects(obj.objects);
-                        }
-                    });
-                };
-
-                if (json.objects) {
-                    processObjects(json.objects);
-                }
-
-                // Download
-                const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(json));
-                const link = document.createElement('a');
-                link.download = `${filename}.json`;
-                link.href = dataStr;
-                link.click();
+                this.exportProject();
             } else {
                 const dataURL = this.canvas.toDataURL({
-                    format: format === 'jpg' ? 'jpeg' : format,
-                    multiplier: quality,
+                    format: format,
+                    quality: quality,
+                    multiplier: multiplier,
                     left: 0,
                     top: 0,
                     width: this.originalWidth,
@@ -696,18 +799,26 @@ export class CanvasManager {
                 });
 
                 const link = document.createElement('a');
-                link.download = `${filename}.${format}`;
                 link.href = dataURL;
+                link.download = `${filename}.${format}`;
+                document.body.appendChild(link);
                 link.click();
+                document.body.removeChild(link);
             }
+
+            NotificationManager.success('Export successful');
+        } catch (err) {
+            console.error(err);
+            NotificationManager.error('Export failed');
         } finally {
-            // Restore
+            // Restore visual state
             this.canvas.setViewportTransform(originalVPT);
             this.workspace.set({ stroke: originalStroke });
             guides.forEach(g => g.set({ opacity: 1 }));
             this.canvas.requestRenderAll();
         }
     }
+
 
     // --- ON-CANVAS CROP SYSTEM ---
     startCropMode() {
@@ -852,6 +963,74 @@ export class CanvasManager {
         json.width = this.originalWidth;
         json.height = this.originalHeight;
         return json;
+    }
+
+    exportProject() {
+        const json = this.saveProject();
+        json.timestamp = Date.now();
+
+        const jsonString = JSON.stringify(json, null, 2);
+        const blob = new Blob([jsonString], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
+
+        const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
+        const filename = `project-${timestamp}.json`;
+
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = filename;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        URL.revokeObjectURL(url);
+    }
+
+    /**
+     * Extracts text from the currently active image using OCR.
+     */
+    async extractTextFromActiveImage() {
+        const activeObject = this.canvas.getActiveObject();
+        if (!activeObject || (activeObject.type !== 'image' && activeObject.type !== 'fabric-image')) {
+            NotificationManager.warning('Please select an image to extract text.');
+            return;
+        }
+
+        try {
+            NotificationManager.info('Scanning image for text... (Supports Lao/English)', 4000);
+
+            const src = activeObject.getSrc();
+            // Use 'lao+eng' to support both languages
+            const text = await TextExtractionService.extractText(src, 'lao+eng', (progress) => {
+                console.log(`OCR Progress: ${Math.round(progress * 100)}%`);
+            });
+
+            if (!text || text.trim().length === 0) {
+                NotificationManager.warning('No text found in the image.');
+                return;
+            }
+
+            // Create a new IText object with the extracted text
+            const textObject = new IText(text, {
+                left: activeObject.left + 20,
+                top: activeObject.top + 20,
+                fontSize: 20,
+                fontFamily: 'Phetsarath OT', // Default to Lao font
+                fill: '#000000',
+            });
+
+            this.canvas.add(textObject);
+            this.canvas.setActiveObject(textObject);
+            this.canvas.renderAll();
+
+            NotificationManager.success('Text extracted successfully!');
+            return text;
+
+        } catch (error) {
+            console.error('Text extraction failed:', error);
+            NotificationManager.error('Failed to extract text.');
+            return null;
+
+        }
     }
 
 

@@ -1,4 +1,5 @@
 import { NotificationManager } from './NotificationManager.js';
+import { IText } from 'fabric';
 
 export class CanvasEvents {
     constructor(canvasManager) {
@@ -225,11 +226,11 @@ export class CanvasEvents {
             if (!clipboardData) return;
 
             const items = clipboardData.items;
-            let imageFound = false;
+            let handled = false;
 
             for (let i = 0; i < items.length; i++) {
                 if (items[i].type.indexOf('image') !== -1) {
-                    imageFound = true;
+                    handled = true;
                     const blob = items[i].getAsFile();
                     const reader = new FileReader();
                     reader.onload = (event) => {
@@ -237,11 +238,56 @@ export class CanvasEvents {
                     };
                     reader.readAsDataURL(blob);
                     NotificationManager.success('Image pasted from clipboard');
+                    break; // Prefer image if both (rare)
+                } else if (items[i].type.indexOf('text/plain') !== -1) {
+                    handled = true;
+                    items[i].getAsString((text) => {
+                        if (text) {
+                            // If we have internal clipboard (Fabric objects), prefer that?
+                            // Logic: If user specifically copied internal object, they probably want that.
+                            // But usually system clipboard overrides. 
+                            // Let's defer to the ClipboardManager.paste() logic for internal fallback, 
+                            // BUT since we are in the 'paste' event, we should handle external text here.
+
+                            // Check if internal clipboard has content. If so, let's skip external text 
+                            // UNLESS the internal clipboard is empty.
+
+                            if (this.cm.clipboardManager && this.cm.clipboardManager.hasInternalContent) {
+                                // Do nothing, let keydown/internal logic handle it or just ignore?
+                                // Actually keydown usually triggers this. 
+                                // Let's just Add Text.
+                                // NOTE: This might duplicate paste if internal logic runs too.
+                            }
+
+                            // To be safe, let's just add the text if no internal clipboard content is active 
+                            // OR if we assume system paste takes precedence.
+                            // Let's use the new manual logic:
+
+                            const vpt = this.canvas.viewportTransform;
+                            const center = this.canvas.getCenter();
+                            const centerX = (center.left - vpt[4]) / vpt[0];
+                            const centerY = (center.top - vpt[5]) / vpt[3];
+
+                            const iText = new IText(text, {
+                                left: centerX,
+                                top: centerY,
+                                originX: 'center',
+                                originY: 'center',
+                                fontFamily: 'Noto Sans Lao',
+                                fontSize: 40,
+                                fill: '#ffffff'
+                            });
+                            this.canvas.add(iText);
+                            this.canvas.setActiveObject(iText);
+                            this.canvas.requestRenderAll();
+                            NotificationManager.success('Text pasted from clipboard');
+                        }
+                    });
                 }
             }
 
-            // If we found and handled an image, we should prevent default
-            if (imageFound) {
+            // If handled, prevent default browser behavior
+            if (handled) {
                 e.preventDefault();
             }
         };

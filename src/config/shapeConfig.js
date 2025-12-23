@@ -87,6 +87,75 @@ export const shapeConfig = {
         const shape = new Path(pathData, { strokeUniform: true, ...options, objectCaching: false });
         shape.scaleToWidth(options.width || 100);
         return shape;
+    },
+    right_triangle: (options) => {
+        const points = [{ x: 0, y: 0 }, { x: 0, y: 100 }, { x: 100, y: 100 }];
+        const shape = new Polygon(points, { strokeUniform: true, ...options, objectCaching: false });
+        shape.scaleToWidth(options.width || 100);
+        return shape;
+    },
+    diamond: (options) => {
+        const points = [{ x: 50, y: 0 }, { x: 100, y: 50 }, { x: 50, y: 100 }, { x: 0, y: 50 }];
+        const shape = new Polygon(points, { strokeUniform: true, ...options, objectCaching: false });
+        shape.scaleToWidth(options.width || 100);
+        return shape;
+    },
+    parallelogram: (options) => {
+        const points = [{ x: 25, y: 0 }, { x: 100, y: 0 }, { x: 75, y: 100 }, { x: 0, y: 100 }];
+        const shape = new Polygon(points, { strokeUniform: true, ...options, objectCaching: false });
+        shape.scaleToWidth(options.width || 100);
+        return shape;
+    },
+    trapezoid: (options) => {
+        const points = [{ x: 25, y: 0 }, { x: 75, y: 0 }, { x: 100, y: 100 }, { x: 0, y: 100 }];
+        const shape = new Polygon(points, { strokeUniform: true, ...options, objectCaching: false });
+        shape.scaleToWidth(options.width || 100);
+        return shape;
+    },
+    cross: (options) => {
+        const points = [
+            { x: 35, y: 0 }, { x: 65, y: 0 }, { x: 65, y: 35 }, { x: 100, y: 35 },
+            { x: 100, y: 65 }, { x: 65, y: 65 }, { x: 65, y: 100 }, { x: 35, y: 100 },
+            { x: 35, y: 65 }, { x: 0, y: 65 }, { x: 0, y: 35 }, { x: 35, y: 35 }
+        ];
+        const shape = new Polygon(points, { strokeUniform: true, ...options, objectCaching: false });
+        shape.scaleToWidth(options.width || 100);
+        return shape;
+    },
+    cloud: (options) => {
+        const pathData = 'M 25,60 a 20,20 0 0 1 0,-40 a 25,25 0 0 1 45,0 a 20,20 0 0 1 5,40 z'; // Simple cloud approximation
+        // Better Cloud Path
+        const path = 'M17.5,19c-4.1,0-7.5-3.4-7.5-7.5c0-1.8,0.6-3.4,1.7-4.7C10.6,2.8,14.5,0,19,0c5.4,0,9.8,3.9,10.8,9.1 c1.4-0.7,3-1.1,4.7-1.1c5.2,0,9.5,4.3,9.5,9.5c0,0.3,0,0.5,0,0.8C46.8,18.8,49,21.6,49,25c0,4.4-3.6,8-8,8H9c-5,0-9-4-9-9 c0-4.7,3.6-8.5,8.2-8.9C8.8,22.2,12.8,19,17.5,19z';
+        const shape = new Path(path, { strokeUniform: true, ...options, objectCaching: false });
+        shape.scaleToWidth(options.width || 100);
+        return shape;
+    },
+    burst: (options) => {
+        const points = [];
+        const rays = 12;
+        const innerRadius = 30;
+        const outerRadius = 50;
+        const center = { x: 50, y: 50 };
+        for (let i = 0; i < rays * 2; i++) {
+            const r = i % 2 === 0 ? outerRadius : innerRadius;
+            const angle = (Math.PI * i) / rays;
+            points.push({
+                x: center.x + r * Math.sin(angle),
+                y: center.y + r * Math.cos(angle)
+            });
+        }
+        const shape = new Polygon(points, { strokeUniform: true, ...options, objectCaching: false });
+        shape.scaleToWidth(options.width || 100);
+        return shape;
+    },
+    lightning: (options) => {
+        const points = [
+            { x: 40, y: 0 }, { x: 15, y: 60 }, { x: 45, y: 60 },
+            { x: 25, y: 100 }, { x: 75, y: 35 }, { x: 45, y: 35 }
+        ];
+        const shape = new Polygon(points, { strokeUniform: true, ...options, objectCaching: false });
+        shape.scaleToWidth(options.width || 100);
+        return shape;
     }
 };
 

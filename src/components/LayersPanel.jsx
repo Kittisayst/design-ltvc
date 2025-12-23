@@ -20,7 +20,10 @@ const LayerItem = memo(({
     onNameDoubleClick,
     onNameChange,
     onNameKeyDown,
-    onNameBlur
+    onNameBlur,
+    onMouseEnter,
+    onMouseLeave,
+    onContextMenu
 }) => {
     const name = obj.name || obj.type;
     const isLocked = obj.lockMovementX;
@@ -42,6 +45,9 @@ const LayerItem = memo(({
         <div
             className={`layer-item ${isSelected ? 'selected' : ''} ${isDragging ? 'dragging' : ''}`}
             onClick={(e) => onSelect(obj, e)}
+            onContextMenu={(e) => onContextMenu(obj, e)}
+            onMouseEnter={() => onMouseEnter(obj)}
+            onMouseLeave={onMouseLeave}
             draggable={true}
             onDragStart={(e) => onDragStart(e, index)}
             onDragOver={onDragOver}
@@ -278,6 +284,35 @@ export function LayersPanel({ canvasManager }) {
         setLayers([...canvasManager.canvas.getObjects()].reverse());
     };
 
+    const handleMouseEnter = (obj) => {
+        if (canvasManager && canvasManager.setHighlightObject) {
+            canvasManager.setHighlightObject(obj);
+        }
+    };
+
+    const handleMouseLeave = () => {
+        if (canvasManager && canvasManager.setHighlightObject) {
+            canvasManager.setHighlightObject(null);
+        }
+    };
+
+    const handleContextMenu = (obj, e) => {
+        e.preventDefault();
+        // Select the object
+        handleSelect(obj, e);
+
+        // Dispatch custom event for global ContextMenu to pick up
+        // We need to pass coordinates relative to viewport or client
+        const evt = new CustomEvent('canvas:contextmenu', {
+            detail: {
+                target: obj,
+                x: e.clientX,
+                y: e.clientY
+            }
+        });
+        document.dispatchEvent(evt);
+    };
+
     return (
         <div className="layers-list">
             {layers.length === 0 ? (
@@ -305,6 +340,9 @@ export function LayersPanel({ canvasManager }) {
                         onNameChange={handleNameChange}
                         onNameKeyDown={handleNameKeyDown}
                         onNameBlur={handleNameBlur}
+                        onMouseEnter={handleMouseEnter}
+                        onMouseLeave={handleMouseLeave}
+                        onContextMenu={handleContextMenu}
                     />
                 ))
             )}

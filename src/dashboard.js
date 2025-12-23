@@ -22,10 +22,12 @@ async function loadTemplates() {
     } catch (error) {
         console.error('Error:', error);
         document.getElementById('template-grid').innerHTML = `
-            <div style="grid-column: 1/-1; text-align: center; color: #ef4444;">
-                Failed to load templates. Please try again later.
+            <div class="loading-state">
+                <i data-lucide="alert-circle" style="width: 40px; height: 40px; color: #ef4444; margin-bottom: 8px;"></i>
+                <p style="color: #ef4444;">Failed to load templates. Please try again later.</p>
             </div>
         `;
+        createIcons({ icons });
     }
 }
 

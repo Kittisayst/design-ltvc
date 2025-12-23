@@ -1,0 +1,101 @@
+[
+    {
+        "category": "Social Media",
+        "items": [
+            {
+                "label": "Instagram Post",
+                "width": 1080,
+                "height": 1080,
+                "unit": "px"
+            },
+            {
+                "label": "Instagram Story",
+                "width": 1080,
+                "height": 1920,
+                "unit": "px"
+            },
+            {
+                "label": "Facebook Post",
+                "width": 1200,
+                "height": 630,
+                "unit": "px"
+            },
+            {
+                "label": "YouTube Thumbnail",
+                "width": 1280,
+                "height": 720,
+                "unit": "px"
+            },
+            {
+                "label": "Twitter Cover",
+                "width": 1500,
+                "height": 500,
+                "unit": "px"
+            },
+            {
+                "label": "LinkedIn Cover",
+                "width": 1584,
+                "height": 396,
+                "unit": "px"
+            }
+        ]
+    },
+    {
+        "category": "Print (300 DPI)",
+        "items": [
+            {
+                "label": "A4",
+                "width": 2480,
+                "height": 3508,
+                "unit": "px"
+            },
+            {
+                "label": "A5",
+                "width": 1748,
+                "height": 2480,
+                "unit": "px"
+            },
+            {
+                "label": "A6",
+                "width": 1240,
+                "height": 1748,
+                "unit": "px"
+            },
+            {
+                "label": "Business Card",
+                "width": 1050,
+                "height": 600,
+                "unit": "px"
+            }
+        ]
+    },
+    {
+        "category": "Screen",
+        "items": [
+            {
+                "label": "Desktop (1920x1080)",
+                "width": 1920,
+                "height": 1080,
+                "unit": "px"
+            },
+            {
+                "label": "MacBook Pro 16",
+                "width": 3072,
+                "height": 1920,
+                "unit": "px"
+            },
+            {
+                "label": "iPad Pro 12.9",
+                "width": 2048,
+                "height": 2732,
+                "unit": "px"
+            },
+            {
+                "label": "iPhone 13 Pro Max",
+                "width": 1284,
+                "height": 2778,
+                "unit": "px"
+            }
+        ]
+    }
+]

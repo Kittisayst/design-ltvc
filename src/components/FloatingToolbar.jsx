@@ -71,7 +71,7 @@ export function FloatingToolbar() {
     const isText = obj.type === 'i-text' || obj.type === 'text';
     const isImage = obj.type === 'image' || obj.type === 'fabric-image'; // Check for image
     const isCrop = obj.id === 'crop-ui';
-    const isSelection = obj.type === 'activeSelection';
+    const isSelection = obj.type === 'activeSelection' || obj.type === 'activeselection';
     const isGroup = obj.type === 'group';
 
 
@@ -170,56 +170,65 @@ export function FloatingToolbar() {
         </>
     );
 
-    const renderTextControls = () => (
-        <>
-            <select
-                className="ft-select"
-                value={obj.fontFamily || 'Arial'}
-                onChange={(e) => handleAction('font-family', e.target.value)}
-                title="Font Family"
-            >
-                <option value="Arial">Arial</option>
-                <option value="Times New Roman">Times New Roman</option>
-                <option value="Courier New">Courier New</option>
-                <option value="Noto Sans Lao">Noto Sans Lao</option>
-                <option value="Noto Serif Lao">Noto Serif Lao</option>
-                <option value="Phetsarath OT">Phetsarath OT</option>
-                <option value="Noto Sans Lao Looped">Noto Sans Lao Looped</option>
-                <option value="Roboto">Roboto</option>
-                <option value="Open Sans">Open Sans</option>
-                <option value="Montserrat">Montserrat</option>
-                <option value="Poppins">Poppins</option>
-                <option value="Lato">Lato</option>
-                <option value="Oswald">Oswald</option>
-                <option value="Playfair Display">Playfair Display</option>
-                <option value="Raleway">Raleway</option>
-                <option value="Impact">Impact</option>
-            </select>
-            <div className="ft-sep"></div>
-            <button
-                className={`ft-btn ${obj.fontWeight === 'bold' ? 'active' : ''}`}
-                onClick={() => handleAction('format', 'bold')}
-                title="Bold"
-            >
-                <Bold size={16} />
-            </button>
-            <button
-                className={`ft-btn ${obj.fontStyle === 'italic' ? 'active' : ''}`}
-                onClick={() => handleAction('format', 'italic')}
-                title="Italic"
-            >
-                <Italic size={16} />
-            </button>
-            <button
-                className={`ft-btn ${obj.underline ? 'active' : ''}`}
-                onClick={() => handleAction('format', 'underline')}
-                title="Underline"
-            >
-                <Underline size={16} />
-            </button>
-            <div className="ft-sep"></div>
-        </>
-    );
+    const renderTextControls = () => {
+        // Helper to extract primary font name from stack (e.g. "'Phetsarath OT', sans-serif" -> "Phetsarath OT")
+        const getPrimaryFont = (fontStack) => {
+            if (!fontStack) return 'Arial';
+            const primary = fontStack.split(',')[0].trim();
+            return primary.replace(/['"]/g, ''); // Remove quotes
+        };
+
+        return (
+            <>
+                <select
+                    className="ft-select"
+                    value={getPrimaryFont(obj.fontFamily) || 'Arial'}
+                    onChange={(e) => handleAction('font-family', e.target.value)}
+                    title="Font Family"
+                >
+                    <option value="Arial">Arial</option>
+                    <option value="Times New Roman">Times New Roman</option>
+                    <option value="Courier New">Courier New</option>
+                    <option value="Noto Sans Lao">Noto Sans Lao</option>
+                    <option value="Noto Serif Lao">Noto Serif Lao</option>
+                    <option value="Phetsarath OT">Phetsarath OT</option>
+                    <option value="Noto Sans Lao Looped">Noto Sans Lao Looped</option>
+                    <option value="Roboto">Roboto</option>
+                    <option value="Open Sans">Open Sans</option>
+                    <option value="Montserrat">Montserrat</option>
+                    <option value="Poppins">Poppins</option>
+                    <option value="Lato">Lato</option>
+                    <option value="Oswald">Oswald</option>
+                    <option value="Playfair Display">Playfair Display</option>
+                    <option value="Raleway">Raleway</option>
+                    <option value="Impact">Impact</option>
+                </select>
+                <div className="ft-sep"></div>
+                <button
+                    className={`ft-btn ${obj.fontWeight === 'bold' ? 'active' : ''}`}
+                    onClick={() => handleAction('format', 'bold')}
+                    title="Bold"
+                >
+                    <Bold size={16} />
+                </button>
+                <button
+                    className={`ft-btn ${obj.fontStyle === 'italic' ? 'active' : ''}`}
+                    onClick={() => handleAction('format', 'italic')}
+                    title="Italic"
+                >
+                    <Italic size={16} />
+                </button>
+                <button
+                    className={`ft-btn ${obj.underline ? 'active' : ''}`}
+                    onClick={() => handleAction('format', 'underline')}
+                    title="Underline"
+                >
+                    <Underline size={16} />
+                </button>
+                <div className="ft-sep"></div>
+            </>
+        );
+    };
 
     const renderStandardControls = () => (
         <>

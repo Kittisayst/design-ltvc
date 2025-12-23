@@ -114,8 +114,8 @@ export class ObjectManager {
         const active = this.getActiveObject();
         if (active) {
             this.canvas.bringObjectForward(active);
-            this.canvas.requestRenderAll();
-            this.canvas.requestRenderAll();
+            this.canvas.renderAll();
+            this.canvas.fire('layer:updated');
         }
     }
 
@@ -123,12 +123,10 @@ export class ObjectManager {
         const active = this.getActiveObject();
         if (active) {
             const index = this.canvas.getObjects().indexOf(active);
-            if (index > 1) { // 0 is usually clip/bg, 1 might be workspace? 
-                // In CanvasManager, workspace is sent to back.
-                // We need to be careful not to put object behind workspace.
+            if (index > 0) {
                 this.canvas.sendObjectBackwards(active);
-                this.canvas.requestRenderAll();
-                this.canvas.requestRenderAll();
+                this.canvas.renderAll();
+                this.canvas.fire('layer:updated');
             }
         }
     }
@@ -137,8 +135,8 @@ export class ObjectManager {
         const active = this.getActiveObject();
         if (active) {
             this.canvas.bringObjectToFront(active);
-            this.canvas.requestRenderAll();
-            this.canvas.requestRenderAll();
+            this.canvas.renderAll();
+            this.canvas.fire('layer:updated');
         }
     }
 
@@ -150,8 +148,8 @@ export class ObjectManager {
             if (this.canvasManager.workspace) {
                 this.canvas.sendObjectToBack(this.canvasManager.workspace);
             }
-            this.canvas.requestRenderAll();
-            this.canvas.requestRenderAll();
+            this.canvas.renderAll();
+            this.canvas.fire('layer:updated');
         }
     }
 

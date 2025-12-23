@@ -202,7 +202,7 @@ export class CanvasViewport {
         }
 
         // Re-center logic if needed, but for now we just resize the bounding box
-        this.resetZoom();
+        this.fitToScreen();
     }
 
     toggleHandMode() {

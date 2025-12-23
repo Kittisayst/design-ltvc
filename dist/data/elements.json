@@ -5,7 +5,6 @@
             {
                 "type": "shape",
                 "shapeType": "rect",
-                "icon": "./elements/Rectangle.png",
                 "label": "Rectangle",
                 "options": {
                     "width": 100,
@@ -16,7 +15,6 @@
             {
                 "type": "shape",
                 "shapeType": "circle",
-                "icon": "./elements/Circle.png",
                 "label": "Circle",
                 "options": {
                     "radius": 50,
@@ -26,7 +24,6 @@
             {
                 "type": "shape",
                 "shapeType": "triangle",
-                "icon": "./elements/Triangle.png",
                 "label": "Triangle",
                 "options": {
                     "width": 100,
@@ -37,7 +34,6 @@
             {
                 "type": "shape",
                 "shapeType": "star",
-                "icon": "./elements/shape_star.svg",
                 "label": "Star",
                 "options": {
                     "width": 100,
@@ -47,7 +43,6 @@
             {
                 "type": "shape",
                 "shapeType": "pentagon",
-                "icon": "./elements/shape_pentagon.svg",
                 "label": "Pentagon",
                 "options": {
                     "width": 100,
@@ -57,7 +52,6 @@
             {
                 "type": "shape",
                 "shapeType": "hexagon",
-                "icon": "./elements/shape_hexagon.svg",
                 "label": "Hexagon",
                 "options": {
                     "width": 100,
@@ -67,7 +61,6 @@
             {
                 "type": "shape",
                 "shapeType": "arrow",
-                "icon": "./elements/shape_arrow_right.svg",
                 "label": "Arrow",
                 "options": {
                     "width": 100,
@@ -77,7 +70,6 @@
             {
                 "type": "shape",
                 "shapeType": "message_box",
-                "icon": "./elements/shape_chat_bubble.svg",
                 "label": "Message",
                 "options": {
                     "width": 100,
@@ -87,8 +79,79 @@
             {
                 "type": "shape",
                 "shapeType": "heart",
-                "icon": "./elements/shape_heart.svg",
                 "label": "Heart",
+                "options": {
+                    "width": 100,
+                    "fill": "#333333"
+                }
+            },
+            {
+                "type": "shape",
+                "shapeType": "right_triangle",
+                "label": "Right Triangle",
+                "options": {
+                    "width": 100,
+                    "fill": "#333333"
+                }
+            },
+            {
+                "type": "shape",
+                "shapeType": "diamond",
+                "label": "Diamond",
+                "options": {
+                    "width": 100,
+                    "fill": "#333333"
+                }
+            },
+            {
+                "type": "shape",
+                "shapeType": "parallelogram",
+                "label": "Parallelogram",
+                "options": {
+                    "width": 100,
+                    "fill": "#333333"
+                }
+            },
+            {
+                "type": "shape",
+                "shapeType": "trapezoid",
+                "label": "Trapezoid",
+                "options": {
+                    "width": 100,
+                    "fill": "#333333"
+                }
+            },
+            {
+                "type": "shape",
+                "shapeType": "cross",
+                "label": "Cross",
+                "options": {
+                    "width": 100,
+                    "fill": "#333333"
+                }
+            },
+            {
+                "type": "shape",
+                "shapeType": "cloud",
+                "label": "Cloud",
+                "options": {
+                    "width": 100,
+                    "fill": "#333333"
+                }
+            },
+            {
+                "type": "shape",
+                "shapeType": "burst",
+                "label": "Burst",
+                "options": {
+                    "width": 100,
+                    "fill": "#333333"
+                }
+            },
+            {
+                "type": "shape",
+                "shapeType": "lightning",
+                "label": "Lightning",
                 "options": {
                     "width": 100,
                     "fill": "#333333"

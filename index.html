@@ -38,49 +38,11 @@
             </div>
         </div>
 
-        <!-- Sidebar Navigation -->
-        <div class="sidebar-nav">
-            <button class="nav-btn active" data-tab="elements-panel" title="Elements">
-                <i data-lucide="shapes"></i>
-            </button>
-            <button class="nav-btn" data-tab="templates-panel" title="Templates">
-                <i data-lucide="layout-template"></i>
-            </button>
-            <button class="nav-btn" data-tab="layers-panel" title="Layers">
-                <i data-lucide="layers"></i>
-            </button>
-            <div class="spacer"></div>
-            <!-- Bottom Actions? -->
-        </div>
-
-        <!-- Sidebar Content -->
-        <div class="sidebar-content">
-            <!-- Elements Panel -->
-            <div id="elements-panel" class="panel-section active">
-                <div class="panel-header">
-                    <h3>Elements</h3>
-                </div>
-                <!-- New Elements Library Container -->
-                <div id="elements-library-container" class="elements-library-container">
-                    <!-- Content Injected by ElementsPanel.js -->
-                </div>
-            </div>
-
-            <!-- Templates Panel -->
-            <div id="templates-panel" class="panel-section">
-                <div class="panel-header">
-                    <h3>Templates</h3>
-                </div>
-                <div id="templates-grid" class="templates-grid">
-                    <!-- Injected by TemplatesPanel.js -->
-                </div>
-            </div>
-        </div>
-
         <div class="template-grid" id="template-grid">
-            <!-- Loading state -->
-            <div style="grid-column: 1/-1; text-align: center; padding: 40px; color: var(--text-secondary);">
-                Loading templates...
+            <!-- Loading Spinner -->
+            <div class="loading-state">
+                <div class="spinner"></div>
+                <p>Loading templates...</p>
             </div>
         </div>
     </div>
@@ -89,4 +51,3 @@
 </body>
 
 </html>
-```

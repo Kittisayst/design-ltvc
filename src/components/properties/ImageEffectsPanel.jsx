@@ -1,7 +1,7 @@
 import React from 'react';
 import { useStore } from '../../store/useStore';
 import { useCanvas } from '../../context/CanvasContext';
-import { Crop, Layers, Wand2, Sparkles } from 'lucide-react';
+import { Crop, Layers, Wand2, Sparkles, ScanText } from 'lucide-react';
 import BackgroundRemovalService from '../../services/BackgroundRemovalService';
 import { NotificationManager } from '../../core/NotificationManager';
 
@@ -61,6 +61,7 @@ export function ImageEffectsPanel({ activeObject, canvasManager, onUpdate }) {
     const [isCropping, setIsCropping] = React.useState(false);
     const [isRemovingBackground, setIsRemovingBackground] = React.useState(false);
     const [isUpscaling, setIsUpscaling] = React.useState(false);
+    const [isExtractingText, setIsExtractingText] = React.useState(false);
     const [sharpenLevel, setSharpenLevel] = React.useState(0);
     const { extractedPalette, setExtractedPalette } = useStore();
 
@@ -77,6 +78,7 @@ export function ImageEffectsPanel({ activeObject, canvasManager, onUpdate }) {
         NotificationManager.info("Removing background. This may take a moment...", 3000);
         try {
             const src = activeObject.getSrc();
+            NotificationManager.info("Downloading AI models. Check Console for progress...", 5000);
             const blob = await BackgroundRemovalService.removeBackground(src);
             const newUrl = URL.createObjectURL(blob);
             await canvasManager.replaceImage(activeObject, newUrl);
@@ -86,6 +88,15 @@ export function ImageEffectsPanel({ activeObject, canvasManager, onUpdate }) {
             NotificationManager.error("Failed to remove background.");
         } finally {
             setIsRemovingBackground(false);
+        }
+    };
+
+    const handleExtractText = async () => {
+        setIsExtractingText(true);
+        try {
+            await canvasManager.extractTextFromActiveImage();
+        } finally {
+            setIsExtractingText(false);
         }
     };
 
@@ -128,73 +139,81 @@ export function ImageEffectsPanel({ activeObject, canvasManager, onUpdate }) {
         <div className="section">
             <div className="section-title">Image Correction</div>
 
-            <div className="input-group mb-2" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexDirection: 'row' }}>
-                <label className="input-label" style={{ margin: 0 }}>Crop Image</label>
-                <div
-                    className={`switch-toggle ${isCropping ? 'active' : ''}`}
-                    onClick={() => isCropping ? canvasManager.cancelCrop() : canvasManager.startCropMode()}
-                    title="Toggle Crop Mode"
-                    style={{ margin: 0 }}
-                >
-                    <div className="switch-handle" />
-                </div>
-            </div>
-
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px', marginBottom: '16px' }}>
-                <button
-                    className="btn-primary"
-                    onClick={handleRemoveBackground}
-                    disabled={isRemovingBackground}
-                    style={{
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        gap: '8px',
-                        background: 'linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%)',
-                        border: 'none',
-                        borderRadius: '8px',
-                        padding: '12px 0',
-                        boxShadow: '0 4px 6px -1px rgba(99, 102, 241, 0.2), 0 2px 4px -1px rgba(99, 102, 241, 0.1)',
-                        transition: 'all 0.3s ease',
-                        fontWeight: 500,
-                        fontSize: '0.85rem'
-                    }}
-                >
-                    {isRemovingBackground ? (
-                        <div className="spinner-small" style={{ border: '2px solid rgba(255,255,255,0.3)', borderTopColor: '#fff', borderRadius: '50%', width: '16px', height: '16px', animation: 'spin 1s linear infinite' }}></div>
-                    ) : (
-                        <>
-                            <Wand2 size={16} color="#fff" />
-                            <span>Remove BG</span>
-                        </>
-                    )}
-                </button>
-
-                <button
-                    className="btn-secondary"
-                    onClick={() => canvasManager.vectorizeActiveImage()}
-                    style={{
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        gap: '8px',
-                        background: 'var(--bg-tertiary)',
-                        border: '1px solid var(--border-color)',
-                        borderRadius: '8px',
-                        padding: '12px 0',
-                        color: 'var(--text-primary)',
-                        transition: 'all 0.3s ease',
-                        fontWeight: 500,
-                        fontSize: '0.85rem'
-                    }}
-                >
-                    <Layers size={16} />
-                    <span>Vectorize</span>
-                </button>
-            </div>
+            <button
+                className={`btn-secondary full-width mb-2 ${isCropping ? 'active' : ''}`}
+                onClick={() => isCropping ? canvasManager.cancelCrop() : canvasManager.startCropMode()}
+                style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    gap: '8px',
+                    background: isCropping ? 'var(--accent-primary)' : 'var(--bg-tertiary)',
+                    border: '1px solid var(--border-color)',
+                    borderRadius: '8px',
+                    padding: '12px 0',
+                    color: isCropping ? '#fff' : 'var(--text-primary)',
+                    transition: 'all 0.3s ease',
+                    fontWeight: 500,
+                    fontSize: '0.85rem'
+                }}
+            >
+                <Crop size={16} />
+                <span>{isCropping ? 'Done Cropping' : 'Crop Image'}</span>
+            </button>
 
             <button
-                className="btn-secondary full-width mb-3"
+                className="btn-primary full-width mb-2"
+                onClick={handleRemoveBackground}
+                disabled={isRemovingBackground}
+                style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    gap: '8px',
+                    background: 'linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%)',
+                    border: 'none',
+                    borderRadius: '8px',
+                    padding: '12px 0',
+                    boxShadow: '0 4px 6px -1px rgba(99, 102, 241, 0.2), 0 2px 4px -1px rgba(99, 102, 241, 0.1)',
+                    transition: 'all 0.3s ease',
+                    fontWeight: 500,
+                    fontSize: '0.85rem'
+                }}
+            >
+                {isRemovingBackground ? (
+                    <div className="spinner-small" style={{ border: '2px solid rgba(255,255,255,0.3)', borderTopColor: '#fff', borderRadius: '50%', width: '16px', height: '16px', animation: 'spin 1s linear infinite' }}></div>
+                ) : (
+                    <>
+                        <Wand2 size={16} color="#fff" />
+                        <span>Remove BG</span>
+                    </>
+                )}
+            </button>
+
+            <button
+                className="btn-secondary full-width mb-2"
+                onClick={() => canvasManager.vectorizeActiveImage()}
+                style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    gap: '8px',
+                    background: 'var(--bg-tertiary)',
+                    border: '1px solid var(--border-color)',
+                    borderRadius: '8px',
+                    padding: '12px 0',
+                    color: 'var(--text-primary)',
+                    transition: 'all 0.3s ease',
+                    fontWeight: 500,
+                    fontSize: '0.85rem'
+                }}
+            >
+                <Layers size={16} />
+                <span>Vectorize</span>
+            </button>
+
+            <button
+                className="btn-secondary full-width mb-2"
                 onClick={handleUpscale}
                 disabled={isUpscaling}
                 style={{
@@ -217,7 +236,7 @@ export function ImageEffectsPanel({ activeObject, canvasManager, onUpdate }) {
                 ) : (
                     <>
                         <Sparkles size={16} className="text-accent" style={{ color: '#fbbf24' }} />
-                        <span>AI Enhance Quality (x2)</span>
+                        <span>AI Upscale (x2)</span>
                     </>
                 )}
             </button>
@@ -235,12 +254,36 @@ export function ImageEffectsPanel({ activeObject, canvasManager, onUpdate }) {
                     fontSize: '0.85rem'
                 }}
             >
-                <div style={{ display: 'flex', gap: '2px' }}>
+                <div style={{ display: 'flex', gap: '3px' }}>
                     <div style={{ width: '6px', height: '6px', borderRadius: '50%', background: '#ef4444' }} />
                     <div style={{ width: '6px', height: '6px', borderRadius: '50%', background: '#3b82f6' }} />
                     <div style={{ width: '6px', height: '6px', borderRadius: '50%', background: '#10b981' }} />
                 </div>
                 <span>Extract Color Palette</span>
+            </button>
+
+            <button
+                className="btn-secondary full-width mb-3"
+                onClick={handleExtractText}
+                disabled={isExtractingText}
+                style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    gap: '8px',
+                    padding: '10px 0',
+                    borderRadius: '8px',
+                    fontSize: '0.85rem'
+                }}
+            >
+                {isExtractingText ? (
+                    <div className="spinner-small" style={{ border: '2px solid rgba(255,255,255,0.3)', borderTopColor: 'var(--accent-primary)', borderRadius: '50%', width: '16px', height: '16px', animation: 'spin 1s linear infinite' }}></div>
+                ) : (
+                    <>
+                        <ScanText size={16} />
+                        <span>Extract Text (OCR)</span>
+                    </>
+                )}
             </button>
 
             <div className="input-group mb-3">

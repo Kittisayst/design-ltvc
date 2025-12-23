@@ -1,4 +1,4 @@
-import { Copy, Lock, Download, FolderOpen } from 'lucide-react';
+import { Copy, Lock, Download, FolderOpen, Save } from 'lucide-react';
 import { useRef } from 'react';
 
 export function ActionButtons({ canvasManager, onExport }) {
@@ -15,6 +15,10 @@ export function ActionButtons({ canvasManager, onExport }) {
 
     const handleImportClick = () => {
         fileInputRef.current?.click();
+    };
+
+    const handleSaveProject = () => {
+        canvasManager?.exportProject();
     };
 
     const handleFileChange = (e) => {
@@ -49,6 +53,11 @@ export function ActionButtons({ canvasManager, onExport }) {
             {/* Import Button */}
             <button className="icon-btn" onClick={handleImportClick} title="Import JSON Project">
                 <FolderOpen size={16} />
+            </button>
+
+            {/* Save Project Button */}
+            <button className="icon-btn" onClick={handleSaveProject} title="Save Project (JSON)">
+                <Save size={16} />
             </button>
 
             {/* Export Button (Triggers Global Modal) */}

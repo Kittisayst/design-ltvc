@@ -72,21 +72,9 @@ export class ShapeManager {
                 const group = new Group(objects, {
                     ...opts,
                     ...options,
-                    strokeUniform: true,
                     left: 100,
                     top: 100
                 });
-
-                // Ensure strokeUniform is set on all children
-                const setPropsRecursive = (objs) => {
-                    objs.forEach(obj => {
-                        obj.set('strokeUniform', true);
-                        if (obj.type === 'group') {
-                            setPropsRecursive(obj._objects);
-                        }
-                    });
-                };
-                if (group._objects) setPropsRecursive(group._objects);
 
                 // Apply fill if provided
                 if (options.fill) {
@@ -124,21 +112,9 @@ export class ShapeManager {
                 const group = new Group(objects, {
                     ...opts,
                     ...options,
-                    strokeUniform: true,
                     left: 100,
                     top: 100
                 });
-
-                // Ensure strokeUniform on children
-                const setPropsRecursive = (objs) => {
-                    objs.forEach(obj => {
-                        obj.set('strokeUniform', true);
-                        if (obj.type === 'group') {
-                            setPropsRecursive(obj._objects);
-                        }
-                    });
-                };
-                if (group._objects) setPropsRecursive(group._objects);
 
                 if (options.fill) {
                     const setFillRecursive = (objs) => {

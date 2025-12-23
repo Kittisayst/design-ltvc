@@ -44,15 +44,26 @@ export function TextPanel({ activeObject, canvasManager, onUpdate }) {
     const fontStyle = activeObject.fontStyle || 'normal';
     const underline = !!activeObject.underline;
 
+    // Helper to extract primary font name from stack (e.g. "'Phetsarath OT', sans-serif" -> "Phetsarath OT")
+    const getPrimaryFont = (fontStack) => {
+        if (!fontStack) return 'Arial';
+        const primary = fontStack.split(',')[0].trim();
+        return primary.replace(/['"]/g, ''); // Remove quotes
+    };
+
+    const currentFont = getPrimaryFont(activeObject.fontFamily);
+
     return (
         <div className="section">
             <div className="section-title">Text Style</div>
 
             <div className="input-group">
-                <label className="input-label">Font</label>
+                <div className="label-row">
+                    <label className="input-label">Font</label>
+                </div>
                 <select
                     className="select-field"
-                    value={activeObject.fontFamily || 'Arial'}
+                    value={currentFont}
                     onChange={handleFontChange}
                 >
                     {fonts.map((f) => (
@@ -150,18 +161,88 @@ export function TextPanel({ activeObject, canvasManager, onUpdate }) {
 
             <div className="input-group mt-2">
                 <div className="label-row">
-                    <label className="input-label">Stroke Width</label>
-                    <span className="value-display">{activeObject.strokeWidth || 0}</span>
+                    <label className="input-label">Char Spacing</label>
+                    <span className="value-display">{activeObject.charSpacing || 0}</span>
                 </div>
                 <input
                     type="range"
                     className="range-slider"
-                    min="0"
-                    max="20"
-                    step="0.5"
-                    value={activeObject.strokeWidth || 0}
-                    onChange={(e) => onUpdate('strokeWidth', parseFloat(e.target.value))}
+                    min="-50"
+                    max="200"
+                    step="10"
+                    value={activeObject.charSpacing || 0}
+                    onChange={(e) => onUpdate('charSpacing', parseInt(e.target.value))}
                 />
+            </div>
+
+            <div className="section-divider my-2"></div>
+            <div className="section-title">Effects</div>
+
+            <div className="effects-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '8px' }}>
+                <button
+                    className="btn-effect"
+                    style={{ padding: '8px', border: '1px solid var(--border-color)', borderRadius: '6px', background: 'var(--bg-tertiary)', cursor: 'pointer', fontSize: '0.8rem', color: 'var(--text-secondary)' }}
+                    onClick={() => {
+                        onUpdate('shadow', null);
+                        onUpdate('stroke', null);
+                        onUpdate('strokeWidth', 0);
+                        if (!activeObject.fill) onUpdate('fill', '#ffffff'); // Restore fill if hollow
+                    }}
+                    title="No Effect"
+                >
+                    None
+                </button>
+                <button
+                    className="btn-effect"
+                    style={{ padding: '8px', border: '1px solid var(--border-color)', borderRadius: '6px', background: 'var(--bg-tertiary)', cursor: 'pointer', fontSize: '0.8rem', color: 'var(--text-primary)', textShadow: '2px 2px 2px rgba(0,0,0,0.5)' }}
+                    onClick={() => {
+                        onUpdate('shadow', { color: 'rgba(0,0,0,0.5)', blur: 5, offsetX: 5, offsetY: 5 });
+                    }}
+                >
+                    Shadow
+                </button>
+                <button
+                    className="btn-effect"
+                    style={{ padding: '8px', border: '1px solid var(--border-color)', borderRadius: '6px', background: 'var(--bg-tertiary)', cursor: 'pointer', fontSize: '0.8rem', color: 'var(--text-primary)', textShadow: '0 10px 20px rgba(0,0,0,0.5)' }}
+                    onClick={() => {
+                        onUpdate('shadow', { color: 'rgba(0,0,0,0.6)', blur: 25, offsetX: 0, offsetY: 0 });
+                    }}
+                >
+                    Lift
+                </button>
+                <button
+                    className="btn-effect"
+                    style={{ padding: '8px', border: '1px solid var(--border-color)', borderRadius: '6px', background: 'var(--bg-tertiary)', cursor: 'pointer', fontSize: '0.8rem', color: '#ff00ff', textShadow: '0 0 10px #ff00ff' }}
+                    onClick={() => {
+                        const color = activeObject.fill && activeObject.fill !== 'transparent' ? activeObject.fill : '#ff00ff';
+                        onUpdate('shadow', { color: color, blur: 20, offsetX: 0, offsetY: 0 });
+                    }}
+                >
+                    Neon
+                </button>
+                <button
+                    className="btn-effect"
+                    style={{ padding: '8px', border: '1px solid var(--border-color)', borderRadius: '6px', background: 'var(--bg-tertiary)', cursor: 'pointer', fontSize: '0.8rem', color: 'var(--text-primary)', WebkitTextStroke: '1px var(--text-primary)', textStroke: '1px var(--text-primary)' }}
+                    onClick={() => {
+                        onUpdate('stroke', activeObject.fill || '#000000');
+                        onUpdate('strokeWidth', 1);
+                        onUpdate('shadow', null);
+                    }}
+                >
+                    Outline
+                </button>
+                <button
+                    className="btn-effect"
+                    style={{ padding: '8px', border: '1px solid var(--border-color)', borderRadius: '6px', background: 'var(--bg-tertiary)', cursor: 'pointer', fontSize: '0.8rem', color: 'var(--bg-tertiary)', WebkitTextStroke: '1px var(--text-primary)' }}
+                    onClick={() => {
+                        onUpdate('stroke', '#ffffff');
+                        onUpdate('strokeWidth', 2);
+                        onUpdate('fill', null); // Transparent
+                        onUpdate('shadow', null);
+                    }}
+                >
+                    Hollow
+                </button>
             </div>
         </div>
     );
