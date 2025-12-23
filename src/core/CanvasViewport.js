@@ -4,6 +4,7 @@ export class CanvasViewport {
     constructor(canvasManager) {
         this.cm = canvasManager;
         this.canvas = canvasManager.canvas;
+        this._isDisposed = false;
 
         // State
         this.isDragging = false;
@@ -18,27 +19,33 @@ export class CanvasViewport {
         // Callbacks
         this.zoomCallback = null;
 
+        // Handlers needed for removal
+        this.handleWindowResize = () => {
+            if (this.canvasWrapper && !this._isDisposed) {
+                this.resizeCanvasElement(this.canvasWrapper.clientWidth, this.canvasWrapper.clientHeight);
+            }
+        };
+
         // Init
         this.setupZoomPan();
 
         // Auto Resize on Window Resize
-        window.addEventListener('resize', () => {
-            if (this.canvasWrapper) {
-                this.resizeCanvasElement(this.canvasWrapper.clientWidth, this.canvasWrapper.clientHeight);
-            }
-        });
+        window.addEventListener('resize', this.handleWindowResize);
 
         // Initial Resize to fill
         if (this.canvasWrapper) {
-            // Defer slightly to ensure DOM is ready? 
-            // Or just do it.
-            setTimeout(() => {
-                this.resizeCanvasElement(this.canvasWrapper.clientWidth, this.canvasWrapper.clientHeight);
+            this.resizeTimeout = setTimeout(() => {
+                if (!this._isDisposed) {
+                    this.resizeCanvasElement(this.canvasWrapper.clientWidth, this.canvasWrapper.clientHeight);
+                }
             }, 0);
         }
+    }
 
-        // Initial Fit
-        // setTimeout(() => this.fitToScreen(), 100); 
+    dispose() {
+        this._isDisposed = true;
+        window.removeEventListener('resize', this.handleWindowResize);
+        clearTimeout(this.resizeTimeout);
     }
 
     onZoomChange(callback) {
@@ -67,10 +74,9 @@ export class CanvasViewport {
             opt.e.stopPropagation();
         });
 
-        // Start Panning
         this.canvas.on('mouse:down', (opt) => {
             const evt = opt.e;
-            if (evt.altKey || this.isSpacePanning || this.isHandMode) {
+            if (this.isSpacePanning || this.isHandMode) {
                 this.isDragging = true;
                 this.canvas.selection = false;
                 this.lastPosX = evt.clientX;
@@ -95,8 +101,11 @@ export class CanvasViewport {
         });
 
         this.canvas.on('mouse:up', () => {
-            // Stop dragging logic (kept same as before mostly)
+            this.canvas.setViewportTransform(this.canvas.viewportTransform);
             this.isDragging = false;
+            if (this.isHandMode || this.isSpacePanning) {
+                this.canvas.setCursor('grab');
+            }
             // Only restore selection if not in permanent hand mode
             if (!this.isHandMode && !this.isSpacePanning) {
                 this.canvas.selection = true;
@@ -168,6 +177,7 @@ export class CanvasViewport {
         const y = (canvasH - this.cm.originalHeight * scale) / 2;
 
         this.canvas.setViewportTransform([scale, 0, 0, scale, x, y]);
+        this.canvas.requestRenderAll();
 
         if (this.zoomCallback) this.zoomCallback(scale);
     }
@@ -196,6 +206,8 @@ export class CanvasViewport {
     }
 
     toggleHandMode() {
+        if (this._isDisposed || !this.canvas) return false;
+
         this.isHandMode = !this.isHandMode;
         if (this.isHandMode) {
             this.canvas.selection = false;
@@ -214,6 +226,7 @@ export class CanvasViewport {
     }
 
     setSpacePanning(isActive) {
+        if (this._isDisposed || !this.canvas) return;
         if (this.isSpacePanning === isActive) return;
         this.isSpacePanning = isActive;
 

@@ -4,100 +4,94 @@
         "items": [
             {
                 "type": "shape",
+                "shapeType": "rect",
                 "icon": "./elements/Rectangle.png",
                 "label": "Rectangle",
-                "shapeType": "rect",
                 "options": {
                     "width": 100,
                     "height": 100,
-                    "fill": "#000000"
+                    "fill": "#333333"
                 }
             },
             {
                 "type": "shape",
+                "shapeType": "circle",
                 "icon": "./elements/Circle.png",
                 "label": "Circle",
-                "shapeType": "circle",
                 "options": {
                     "radius": 50,
-                    "fill": "#000000"
+                    "fill": "#333333"
                 }
             },
             {
                 "type": "shape",
+                "shapeType": "triangle",
                 "icon": "./elements/Triangle.png",
                 "label": "Triangle",
-                "shapeType": "triangle",
                 "options": {
                     "width": 100,
                     "height": 100,
-                    "fill": "#000000"
+                    "fill": "#333333"
                 }
             },
             {
                 "type": "shape",
+                "shapeType": "star",
                 "icon": "./elements/shape_star.svg",
                 "label": "Star",
-                "shapeType": "star",
                 "options": {
                     "width": 100,
-                    "height": 100,
-                    "fill": "#000000"
+                    "fill": "#333333"
                 }
             },
             {
                 "type": "shape",
-                "icon": "./elements/shape_heart.svg",
-                "label": "Heart",
-                "shapeType": "heart",
-                "options": {
-                    "width": 100,
-                    "height": 100,
-                    "fill": "#000000"
-                }
-            },
-            {
-                "type": "shape",
-                "icon": "./elements/shape_arrow_right.svg",
-                "label": "Arrow",
-                "shapeType": "arrow",
-                "options": {
-                    "width": 100,
-                    "height": 100,
-                    "fill": "#000000"
-                }
-            },
-            {
-                "type": "shape",
+                "shapeType": "pentagon",
                 "icon": "./elements/shape_pentagon.svg",
                 "label": "Pentagon",
-                "shapeType": "pentagon",
                 "options": {
                     "width": 100,
-                    "height": 100,
-                    "fill": "#000000"
+                    "fill": "#333333"
                 }
             },
             {
                 "type": "shape",
+                "shapeType": "hexagon",
                 "icon": "./elements/shape_hexagon.svg",
                 "label": "Hexagon",
-                "shapeType": "hexagon",
                 "options": {
                     "width": 100,
-                    "height": 100,
-                    "fill": "#000000"
+                    "fill": "#333333"
                 }
             },
             {
                 "type": "shape",
-                "icon": "./elements/shape_chat_bubble.svg",
-                "label": "Chat Bubble",
-                "shapeType": "message_box",
+                "shapeType": "arrow",
+                "icon": "./elements/shape_arrow_right.svg",
+                "label": "Arrow",
                 "options": {
                     "width": 100,
-                    "height": 100,
-                    "fill": "#000000"
+                    "fill": "#333333"
+                }
+            },
+            {
+                "type": "shape",
+                "shapeType": "message_box",
+                "icon": "./elements/shape_chat_bubble.svg",
+                "label": "Message",
+                "options": {
+                    "width": 100,
+                    "fill": "#333333"
+                }
+            },
+            {
+                "type": "shape",
+                "shapeType": "heart",
+                "icon": "./elements/shape_heart.svg",
+                "label": "Heart",
+                "options": {
+                    "width": 100,
+                    "fill": "#333333"
                 }
             }
         ]

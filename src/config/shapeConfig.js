@@ -5,13 +5,13 @@ import { Rect, Circle, Triangle, Polygon, Path } from 'fabric';
  * This makes it easier to add new shapes without touching core logic.
  */
 export const shapeConfig = {
-    rect: (options) => new Rect(options),
+    rect: (options) => new Rect({ strokeUniform: true, ...options }),
     circle: (options) => {
         // Fabric Circle uses radius, but we often receive width
         if (options.width && !options.radius) options.radius = options.width / 2;
-        return new Circle(options);
+        return new Circle({ strokeUniform: true, ...options });
     },
-    triangle: (options) => new Triangle(options),
+    triangle: (options) => new Triangle({ strokeUniform: true, ...options }),
     star: (options) => {
         const points = [
             { x: 350, y: 75 },
@@ -26,7 +26,7 @@ export const shapeConfig = {
             { x: 321, y: 161 }
         ];
         // Note: objectCaching false is often specific to the app's needs, keeping it here.
-        const shape = new Polygon(points, { ...options, objectCaching: false });
+        const shape = new Polygon(points, { strokeUniform: true, ...options, objectCaching: false });
         shape.scaleToWidth(options.width || 100);
         return shape;
     },
@@ -38,7 +38,7 @@ export const shapeConfig = {
             { x: 18, y: 100 },
             { x: 0, y: 38 }
         ];
-        const shape = new Polygon(points, { ...options, objectCaching: false });
+        const shape = new Polygon(points, { strokeUniform: true, ...options, objectCaching: false });
         shape.scaleToWidth(options.width || 100);
         return shape;
     },
@@ -51,7 +51,7 @@ export const shapeConfig = {
             { x: 0, y: 75 },
             { x: 0, y: 25 }
         ];
-        const shape = new Polygon(points, { ...options, objectCaching: false });
+        const shape = new Polygon(points, { strokeUniform: true, ...options, objectCaching: false });
         shape.scaleToWidth(options.width || 100);
         return shape;
     },
@@ -65,7 +65,7 @@ export const shapeConfig = {
             { x: 50, y: 75 },
             { x: 0, y: 75 }
         ];
-        const shape = new Polygon(points, { ...options, objectCaching: false });
+        const shape = new Polygon(points, { strokeUniform: true, ...options, objectCaching: false });
         shape.scaleToWidth(options.width || 100);
         return shape;
     },
@@ -78,13 +78,13 @@ export const shapeConfig = {
         C 449.12141,238.71731 411.66641,262.11731 381.92956,298.5043 \
         C 352.19271,262.11731 314.73141,238.71731 272.70141,238.71731  \
         z';
-        const shape = new Path(pathData, { ...options, objectCaching: false });
+        const shape = new Path(pathData, { strokeUniform: true, ...options, objectCaching: false });
         shape.scaleToWidth(options.width || 100);
         return shape;
     },
     message_box: (options) => {
         const pathData = 'M20,2H4C2.9,2,2,2.9,2,4v18l4-4h14c1.1,0,2-0.9,2-2V4C22,2.9,21.1,2,20,2z';
-        const shape = new Path(pathData, { ...options, objectCaching: false });
+        const shape = new Path(pathData, { strokeUniform: true, ...options, objectCaching: false });
         shape.scaleToWidth(options.width || 100);
         return shape;
     }

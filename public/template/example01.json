@@ -140,7 +140,7 @@
             "globalCompositeOperation": "source-over",
             "skewX": 0,
             "skewY": 0,
-            "src": "http://localhost:5173/elements/star-full-icon.svg",
+            "src": "/elements/star-full-icon.svg",
             "crossOrigin": null,
             "filters": []
         },
@@ -178,7 +178,7 @@
             "globalCompositeOperation": "source-over",
             "skewX": 0,
             "skewY": 0,
-            "src": "http://localhost:5173/elements/star-full-icon.svg",
+            "src": "/elements/star-full-icon.svg",
             "crossOrigin": null,
             "filters": [
                 {

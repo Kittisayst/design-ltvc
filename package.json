@@ -9,14 +9,29 @@
     "preview": "vite preview"
   },
   "devDependencies": {
+    "@vitejs/plugin-react": "^5.1.2",
     "vite": "^7.2.4"
   },
   "dependencies": {
+    "@imgly/background-removal": "^1.7.0",
+    "@tensorflow/tfjs": "^4.11.0",
+    "colorthief": "^2.6.0",
     "fabric": "^6.9.1",
+    "fast-json-patch": "^3.1.1",
+    "imagetracerjs": "^1.2.6",
     "jspdf": "^3.0.4",
+    "lit": "^3.3.1",
     "lucide": "^0.561.0",
+    "lucide-react": "^0.562.0",
+    "onnxruntime-web": "^1.23.2",
+    "react": "^19.2.3",
+    "react-colorful": "^5.6.1",
+    "react-dom": "^19.2.3",
     "sortablejs": "^1.15.6",
     "sweetalert2": "^11.26.10",
-    "vanilla-colorful": "^0.7.2"
+    "upscaler": "^1.0.0-beta.19",
+    "vanilla-colorful": "^0.7.2",
+    "zundo": "^2.3.0",
+    "zustand": "^5.0.9"
   }
 }
