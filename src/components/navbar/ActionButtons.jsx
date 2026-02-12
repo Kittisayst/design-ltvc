@@ -53,27 +53,28 @@ export function ActionButtons({ onExport }) {
             />
 
             {/* Import Button */}
-            <button className="icon-btn" onClick={handleImportClick} title="Import JSON Project">
+            <button className="icon-btn" onClick={handleImportClick} title="Import JSON Project" aria-label="Import Project">
                 <FolderOpen size={16} />
             </button>
 
             {/* Save Project Button */}
-            <button className="icon-btn" onClick={handleSaveProject} title="Save Project (JSON)">
+            <button className="icon-btn" onClick={handleSaveProject} title="Save Project (JSON)" aria-label="Save Project">
                 <Save size={16} />
             </button>
 
             {/* Export Button (Triggers Global Modal) */}
-            <button className="icon-btn" onClick={onExport} title="Export Design">
+            <button className="icon-btn" onClick={onExport} title="Export Design" aria-label="Export Design">
                 <Download size={16} />
             </button>
 
-            <div style={{ width: '1px', height: '24px', background: 'var(--border-color)', margin: '0 4px' }}></div>
+            <div className="separator-vertical"></div>
 
             <button
                 id="btn-duplicate"
                 className="icon-btn"
                 onClick={handleDuplicate}
                 title="Duplicate"
+                aria-label="Duplicate"
             >
                 <Copy size={16} />
             </button>
@@ -82,6 +83,7 @@ export function ActionButtons({ onExport }) {
                 className="icon-btn"
                 onClick={handleLock}
                 title="Lock/Unlock"
+                aria-label="Lock or Unlock"
             >
                 <Lock size={16} />
             </button>

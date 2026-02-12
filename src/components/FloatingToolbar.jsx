@@ -340,7 +340,6 @@ export function FloatingToolbar() {
                 position: 'fixed',
                 top: `${position.y}px`,
                 left: `${position.x}px`,
-                zIndex: 1000
             }}
         >
             {isCrop ? renderCropControls() : renderStandardControls()}

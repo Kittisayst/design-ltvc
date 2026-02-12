@@ -129,53 +129,47 @@ export function ObjectEffectsPanel({ activeObject, canvasManager, onUpdate }) {
     if (!activeObject) return null;
 
     const isRect = activeObject.type === 'rect';
-    const sectionStyle = { marginBottom: '12px' };
-    const labelStyle = { display: 'flex', justifyContent: 'space-between', marginBottom: '4px' };
-    const inputLabelStyle = { fontSize: '0.8em', color: 'var(--text-secondary)' };
-    const valueStyle = { fontSize: '0.8em', color: 'var(--text-secondary)', opacity: 0.7 };
 
     return (
         <div className="section">
             <div className="section-title">Effects</div>
 
             {/* Drop Shadow */}
-            <div style={sectionStyle}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '6px' }}>
-                    <label style={{ display: 'flex', alignItems: 'center', gap: '6px', cursor: 'pointer', fontSize: '0.85em', color: 'var(--text-primary)' }}>
-                        <input type="checkbox" checked={shadowEnabled} onChange={handleShadowToggle}
-                            style={{ accentColor: 'var(--primary-color)' }} />
+            <div className="effects-section">
+                <div className="effects-toggle">
+                    <label>
+                        <input type="checkbox" checked={shadowEnabled} onChange={handleShadowToggle} />
                         Drop Shadow
                     </label>
                 </div>
                 {shadowEnabled && (
-                    <div style={{ paddingLeft: '4px', display: 'flex', flexDirection: 'column', gap: '6px' }}>
-                        <div style={labelStyle}>
-                            <span style={inputLabelStyle}>Color</span>
-                            <input type="color" value={shadowColor}
-                                onChange={e => handleShadowChange('color', e.target.value)}
-                                style={{ width: '24px', height: '20px', border: 'none', cursor: 'pointer', background: 'none' }} />
+                    <div className="effects-controls">
+                        <div className="effects-label-row">
+                            <span className="effects-label">Color</span>
+                            <input type="color" className="effects-color-input" value={shadowColor}
+                                onChange={e => handleShadowChange('color', e.target.value)} />
                         </div>
-                        <div style={labelStyle}>
-                            <span style={inputLabelStyle}>Blur</span>
-                            <span style={valueStyle}>{shadowBlur}</span>
+                        <div className="effects-label-row">
+                            <span className="effects-label">Blur</span>
+                            <span className="effects-value">{shadowBlur}</span>
                         </div>
                         <input type="range" className="range-slider" min="0" max="50" step="1"
                             value={shadowBlur} onChange={e => handleShadowChange('blur', parseInt(e.target.value))} />
-                        <div style={labelStyle}>
-                            <span style={inputLabelStyle}>Offset X</span>
-                            <span style={valueStyle}>{shadowOffsetX}</span>
+                        <div className="effects-label-row">
+                            <span className="effects-label">Offset X</span>
+                            <span className="effects-value">{shadowOffsetX}</span>
                         </div>
                         <input type="range" className="range-slider" min="-30" max="30" step="1"
                             value={shadowOffsetX} onChange={e => handleShadowChange('offsetX', parseInt(e.target.value))} />
-                        <div style={labelStyle}>
-                            <span style={inputLabelStyle}>Offset Y</span>
-                            <span style={valueStyle}>{shadowOffsetY}</span>
+                        <div className="effects-label-row">
+                            <span className="effects-label">Offset Y</span>
+                            <span className="effects-value">{shadowOffsetY}</span>
                         </div>
                         <input type="range" className="range-slider" min="-30" max="30" step="1"
                             value={shadowOffsetY} onChange={e => handleShadowChange('offsetY', parseInt(e.target.value))} />
-                        <div style={labelStyle}>
-                            <span style={inputLabelStyle}>Opacity</span>
-                            <span style={valueStyle}>{Math.round(shadowOpacity * 100)}%</span>
+                        <div className="effects-label-row">
+                            <span className="effects-label">Opacity</span>
+                            <span className="effects-value">{Math.round(shadowOpacity * 100)}%</span>
                         </div>
                         <input type="range" className="range-slider" min="0" max="1" step="0.05"
                             value={shadowOpacity} onChange={e => handleShadowChange('opacity', parseFloat(e.target.value))} />
@@ -184,16 +178,11 @@ export function ObjectEffectsPanel({ activeObject, canvasManager, onUpdate }) {
             </div>
 
             {/* Blend Mode */}
-            <div style={sectionStyle}>
-                <div style={labelStyle}>
-                    <span style={inputLabelStyle}>Blend Mode</span>
+            <div className="effects-section">
+                <div className="effects-label-row">
+                    <span className="effects-label">Blend Mode</span>
                 </div>
-                <select value={blendMode} onChange={e => handleBlendMode(e.target.value)}
-                    style={{
-                        width: '100%', padding: '6px 8px', borderRadius: '4px',
-                        border: '1px solid var(--border-color)', background: 'var(--bg-tertiary)',
-                        color: 'var(--text-primary)', fontSize: '0.8em', cursor: 'pointer'
-                    }}>
+                <select className="effects-select" value={blendMode} onChange={e => handleBlendMode(e.target.value)}>
                     {BLEND_MODES.map(m => (
                         <option key={m} value={m}>{m === 'source-over' ? 'Normal' : m.replace(/-/g, ' ')}</option>
                     ))}
@@ -201,29 +190,28 @@ export function ObjectEffectsPanel({ activeObject, canvasManager, onUpdate }) {
             </div>
 
             {/* Border / Stroke */}
-            <div style={sectionStyle}>
-                <div style={labelStyle}>
-                    <span style={inputLabelStyle}>Border</span>
-                    <span style={valueStyle}>{borderWidth}px</span>
+            <div className="effects-section">
+                <div className="effects-label-row">
+                    <span className="effects-label">Border</span>
+                    <span className="effects-value">{borderWidth}px</span>
                 </div>
                 <input type="range" className="range-slider" min="0" max="20" step="1"
                     value={borderWidth} onChange={e => handleBorderWidth(parseInt(e.target.value))} />
                 {borderWidth > 0 && (
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginTop: '4px' }}>
-                        <span style={inputLabelStyle}>Color</span>
-                        <input type="color" value={borderColor}
-                            onChange={e => handleBorderColor(e.target.value)}
-                            style={{ width: '24px', height: '20px', border: 'none', cursor: 'pointer', background: 'none' }} />
+                    <div className="effects-color-row">
+                        <span className="effects-label">Color</span>
+                        <input type="color" className="effects-color-input" value={borderColor}
+                            onChange={e => handleBorderColor(e.target.value)} />
                     </div>
                 )}
             </div>
 
             {/* Rounded Corners (rect only) */}
             {isRect && (
-                <div style={sectionStyle}>
-                    <div style={labelStyle}>
-                        <span style={inputLabelStyle}>Corner Radius</span>
-                        <span style={valueStyle}>{cornerRadius}px</span>
+                <div className="effects-section">
+                    <div className="effects-label-row">
+                        <span className="effects-label">Corner Radius</span>
+                        <span className="effects-value">{cornerRadius}px</span>
                     </div>
                     <input type="range" className="range-slider" min="0" max="100" step="1"
                         value={cornerRadius} onChange={e => handleCornerRadius(parseInt(e.target.value))} />

@@ -17,6 +17,14 @@ export const useStore = create((set) => ({
     showResize: false,
     setShowResize: (visible) => set({ showResize: visible }),
 
+    // Sidebar State
+    leftSidebarOpen: true,
+    setLeftSidebarOpen: (open) => set({ leftSidebarOpen: open }),
+    toggleLeftSidebar: () => set((s) => ({ leftSidebarOpen: !s.leftSidebarOpen })),
+    rightSidebarOpen: true,
+    setRightSidebarOpen: (open) => set({ rightSidebarOpen: open }),
+    toggleRightSidebar: () => set((s) => ({ rightSidebarOpen: !s.rightSidebarOpen })),
+
     // Color Picker State
     colorPickerVisible: false,
     setColorPickerVisible: (visible) => set({ colorPickerVisible: visible }),

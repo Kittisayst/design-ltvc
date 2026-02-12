@@ -20,6 +20,12 @@
   z-index: 2;
 }
 
+.nav-divider-right {
+  border-right: 1px solid var(--border-color);
+  padding-right: 12px;
+  margin-right: 12px;
+}
+
 .nav-center {
   display: flex;
   align-items: center;
@@ -92,7 +98,7 @@
 }
 
 .navbar-group .icon-btn.active {
-  background: rgba(99, 102, 241, 0.2);
+  background: color-mix(in srgb, var(--primary-color) 20%, transparent);
   color: var(--primary-light);
 }
 
@@ -126,6 +132,72 @@
   font-size: 0.85rem;
   width: 45px;
   text-align: center;
+}
+
+/* Zoom Level Button */
+.zoom-level-btn {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  background: transparent;
+  border: none;
+  color: var(--text-primary);
+  font-size: 0.85rem;
+  cursor: pointer;
+  padding: 4px 8px;
+  border-radius: 4px;
+  min-width: 70px;
+  justify-content: center;
+  transition: background 0.15s;
+}
+
+.zoom-level-btn:hover {
+  background: var(--bg-hover);
+}
+
+/* Zoom Dropdown */
+.zoom-dropdown-container {
+  position: relative;
+}
+
+.zoom-dropdown-menu {
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  margin-top: 8px;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-sm);
+  padding: 4px 0;
+  min-width: 120px;
+  box-shadow: var(--shadow-lg);
+  z-index: var(--z-floating);
+  display: flex;
+  flex-direction: column;
+  white-space: nowrap;
+}
+
+.zoom-dropdown-item {
+  background: transparent;
+  border: none;
+  color: var(--text-primary);
+  padding: 6px 16px;
+  text-align: left;
+  cursor: pointer;
+  font-size: 0.82rem;
+  width: 100%;
+  transition: background 0.12s;
+}
+
+.zoom-dropdown-item:hover {
+  background: var(--bg-hover);
+}
+
+.zoom-dropdown-divider {
+  height: 1px;
+  background: var(--border-color);
+  margin: 4px 0;
 }
 
 /* Fix for potential center overlap on small screens */

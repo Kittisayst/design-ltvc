@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
+import { PanelLeftClose, PanelLeftOpen, PanelRightClose, PanelRightOpen } from 'lucide-react';
 import { useCanvas } from './context/CanvasContext';
 import { Navbar } from './components/Navbar.jsx';
 import { FloatingToolbar } from './components/FloatingToolbar.jsx';
@@ -16,6 +17,7 @@ import { ResizeModal } from './components/ResizeModal.jsx';
 import { CropToolbar } from './components/canvas/CropToolbar.jsx';
 import { PageNavigator } from './components/PageNavigator.jsx';
 import { WelcomeScreen } from './components/WelcomeScreen.jsx';
+import { ResizeHandle } from './components/ResizeHandle.jsx';
 
 import { useStore } from './store/useStore';
 
@@ -37,6 +39,10 @@ export default function App() {
         activeColorProp,
         colorPickerAlign,
         theme,
+        leftSidebarOpen,
+        toggleLeftSidebar,
+        rightSidebarOpen,
+        toggleRightSidebar,
     } = useStore();
 
     // Initialize theme on mount
@@ -90,8 +96,18 @@ export default function App() {
 
             {/* Workspace */}
             <div className="workspace">
+                {/* Left Sidebar Toggle (outside aside to avoid overflow clip) */}
+                <button
+                    className={`sidebar-toggle-outer sidebar-toggle-outer-left ${leftSidebarOpen ? 'open' : ''}`}
+                    onClick={toggleLeftSidebar}
+                    aria-label="Toggle left sidebar"
+                    title={leftSidebarOpen ? 'Hide left panel' : 'Show left panel'}
+                >
+                    {leftSidebarOpen ? <PanelLeftClose size={16} /> : <PanelLeftOpen size={16} />}
+                </button>
+
                 {/* Left Sidebar */}
-                <aside className="sidebar">
+                <aside className={`sidebar ${leftSidebarOpen ? '' : 'collapsed'}`}>
                     <div className="panel-tabs-container">
                         <button
                             className={`panel-tab-btn ${activeTab === 'elements' ? 'active' : ''}`}
@@ -105,6 +121,9 @@ export default function App() {
                         >
                             Templates
                         </button>
+                        <button className="sidebar-close-btn-inline" onClick={toggleLeftSidebar} aria-label="Hide left panel" title="Hide left panel">
+                            <PanelLeftClose size={14} />
+                        </button>
                     </div>
                     <div id="elements-wrapper">
                         {activeTab === 'elements' ? (
@@ -113,6 +132,7 @@ export default function App() {
                             <TemplatesPanel />
                         )}
                     </div>
+                    {leftSidebarOpen && <ResizeHandle side="left" minWidth={240} maxWidth={480} />}
                 </aside>
 
                 {/* Canvas Area */}
@@ -144,8 +164,22 @@ export default function App() {
                     </main>
                 </div>
 
+                {/* Right Sidebar Toggle (outside aside to avoid overflow clip) */}
+                <button
+                    className={`sidebar-toggle-outer sidebar-toggle-outer-right ${rightSidebarOpen ? 'open' : ''}`}
+                    onClick={toggleRightSidebar}
+                    aria-label="Toggle right sidebar"
+                    title={rightSidebarOpen ? 'Hide right panel' : 'Show right panel'}
+                >
+                    {rightSidebarOpen ? <PanelRightClose size={16} /> : <PanelRightOpen size={16} />}
+                </button>
+
                 {/* Right Sidebar */}
-                <aside className="sidebar-right">
+                <aside className={`sidebar-right ${rightSidebarOpen ? '' : 'collapsed'}`}>
+                    {rightSidebarOpen && <ResizeHandle side="right" minWidth={220} maxWidth={420} />}
+                    <button className="sidebar-close-btn sidebar-close-right" onClick={toggleRightSidebar} aria-label="Hide right panel" title="Hide right panel">
+                        <PanelRightClose size={14} />
+                    </button>
                     <div className="section-title">Properties</div>
                     <PropertyPanel />
 

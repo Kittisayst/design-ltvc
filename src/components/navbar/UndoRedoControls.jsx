@@ -34,6 +34,7 @@ export function UndoRedoControls() {
             <button
                 className="icon-btn"
                 title="Undo (Ctrl+Z)"
+                aria-label="Undo"
                 onClick={() => canvasManager?.undo()}
                 disabled={!canUndo}
             >
@@ -42,6 +43,7 @@ export function UndoRedoControls() {
             <button
                 className="icon-btn"
                 title="Redo (Ctrl+Y)"
+                aria-label="Redo"
                 onClick={() => canvasManager?.redo()}
                 disabled={!canRedo}
             >

@@ -318,8 +318,10 @@ export function LayersPanel() {
     return (
         <div className="layers-list">
             {layers.length === 0 ? (
-                <div style={{ padding: '20px', textAlign: 'center', color: '#999', fontSize: '0.9em' }}>
-                    No objects yet
+                <div className="empty-state-box">
+                    <Box size={32} strokeWidth={1} />
+                    <p>No objects on canvas</p>
+                    <span>Add elements from the left panel to get started</span>
                 </div>
             ) : (
                 layers.map((obj, index) => (

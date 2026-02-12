@@ -9,6 +9,20 @@
   z-index: var(--z-sidebar);
   overflow: hidden;
   box-shadow: 5px 0 15px rgba(0, 0, 0, 0.2);
+  transition: width 0.25s cubic-bezier(0.4, 0, 0.2, 1), min-width 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+}
+
+.sidebar.collapsed {
+  width: 0;
+  min-width: 0;
+  border-right: none;
+  overflow: hidden;
+}
+
+.sidebar.collapsed > *:not(.sidebar-toggle) {
+  opacity: 0;
+  pointer-events: none;
 }
 
 #elements-wrapper {
@@ -73,6 +87,115 @@
   overflow-y: auto;
   z-index: var(--z-sidebar);
   box-shadow: -5px 0 15px rgba(0, 0, 0, 0.2);
+  transition: width 0.25s cubic-bezier(0.4, 0, 0.2, 1), padding 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+}
+
+.sidebar-right.collapsed {
+  width: 0;
+  min-width: 0;
+  padding: 0;
+  border-left: none;
+  overflow: hidden;
+}
+
+.sidebar-right.collapsed > *:not(.sidebar-toggle) {
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* Sidebar Toggle Buttons (outside aside to avoid overflow clip) */
+.sidebar-toggle-outer {
+  width: 36px;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top: 14px;
+  gap: 8px;
+  background: var(--bg-secondary);
+  border: none;
+  border-right: 1px solid var(--border-color);
+  cursor: pointer;
+  color: var(--text-secondary);
+  z-index: var(--z-sidebar);
+  transition: width 0.2s, padding 0.2s, opacity 0.2s;
+}
+
+.sidebar-toggle-outer-right {
+  border-right: none;
+  border-left: 1px solid var(--border-color);
+}
+
+.sidebar-toggle-outer:hover {
+  color: var(--primary-color);
+  background: var(--bg-tertiary);
+}
+
+/* When sidebar is open, hide the external toggle (close btn inside sidebar is used) */
+.sidebar-toggle-outer.open {
+  width: 0;
+  min-width: 0;
+  overflow: hidden;
+  padding: 0;
+  border: none;
+  opacity: 0;
+}
+
+/* Close button inside sidebar (visible when open) */
+.sidebar-close-btn {
+  position: absolute;
+  top: 8px;
+  width: 22px;
+  height: 22px;
+  border-radius: 4px;
+  border: 1px solid var(--border-color);
+  background: var(--bg-tertiary);
+  color: var(--text-secondary);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 25;
+  transition: all 0.15s;
+  padding: 0;
+}
+
+.sidebar-close-btn:hover {
+  background: var(--bg-hover);
+  color: var(--text-primary);
+  border-color: var(--primary-color);
+}
+
+.sidebar-close-left {
+  right: 8px;
+}
+
+/* Inline close button (sits inside panel-tabs-container) */
+.sidebar-close-btn-inline {
+  width: 28px;
+  height: 28px;
+  border-radius: 4px;
+  border: none;
+  background: transparent;
+  color: var(--text-secondary);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  margin-left: auto;
+  transition: all 0.15s;
+  padding: 0;
+}
+
+.sidebar-close-btn-inline:hover {
+  background: var(--bg-hover);
+  color: var(--text-primary);
+}
+
+.sidebar-close-right {
+  right: 8px;
 }
 
 /* Sidebar Sections */
@@ -173,7 +296,7 @@
 
 .input-row input[type="number"]:focus {
   outline: none;
-  background: rgba(255, 255, 255, 0.05);
+  background: var(--bg-hover);
   border-radius: 4px;
 }
 
@@ -187,7 +310,7 @@
   width: 32px;
   height: 32px;
   border: none;
-  background: rgba(255, 255, 255, 0.05);
+  background: var(--bg-tertiary);
   color: var(--text-primary);
   border-radius: 6px;
   flex-shrink: 0;
@@ -326,4 +449,43 @@
   color: var(--text-secondary);
   text-transform: uppercase;
   font-weight: 600;
+}
+
+/* Resize Handle */
+.resize-handle {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 4px;
+  cursor: col-resize;
+  z-index: 30;
+  transition: background 0.15s;
+}
+
+.resize-handle:hover,
+.resize-handle:active {
+  background: var(--primary-color);
+}
+
+.resize-handle-left {
+  right: 0;
+}
+
+.resize-handle-right {
+  left: 0;
+}
+
+/* Responsive Breakpoints */
+@media (max-width: 1200px) {
+  .sidebar { width: 280px; }
+  .sidebar-right { width: 250px; }
+}
+
+@media (max-width: 900px) {
+  .sidebar { width: 0; min-width: 0; border-right: none; overflow: hidden; }
+  .sidebar > *:not(.sidebar-toggle) { opacity: 0; pointer-events: none; }
+  .sidebar .sidebar-toggle-left { right: -28px; opacity: 1; pointer-events: auto; background: var(--bg-secondary); border: 1px solid var(--border-color); }
+  .sidebar-right { width: 0; min-width: 0; padding: 0; border-left: none; overflow: hidden; }
+  .sidebar-right > *:not(.sidebar-toggle) { opacity: 0; pointer-events: none; }
+  .sidebar-right .sidebar-toggle-right { left: -28px; opacity: 1; pointer-events: auto; background: var(--bg-secondary); border: 1px solid var(--border-color); }
 }

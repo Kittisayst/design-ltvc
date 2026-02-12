@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef, lazy, Suspense } from 'react';
 import './PanelCommon.css';
 import './ElementLibrary.css';
-import { Search, Type, TextCursorInput, Upload, ChevronLeft, ChevronRight, ImageDown, QrCode, ScanBarcode, Smile, Shapes, PieChart } from 'lucide-react';
+import { Search, Type, TextCursorInput, Upload, ChevronLeft, ChevronRight, ImageDown, QrCode, ScanBarcode, Smile, Shapes, PieChart, Loader, SearchX } from 'lucide-react';
 import { useCanvas } from '../context/CanvasContext';
 import { StockPhotosPanel } from './elements/StockPhotosPanel';
 import { QRCodePanel } from './elements/QRCodePanel';
@@ -113,7 +113,7 @@ export function ElementsPanel() {
     const filteredItems = allFilteredItems.slice(0, displayLimit);
 
     if (isLoading) {
-        return <div style={{ padding: '20px', color: '#888' }}>Loading...</div>;
+        return <div className="empty-state-box"><Loader size={28} strokeWidth={1} className="animate-spin" /><p>Loading elements...</p></div>;
     }
 
     // --- SUB-PANEL VIEWS ---
@@ -121,9 +121,9 @@ export function ElementsPanel() {
     if (viewMode === 'stock') return <StockPhotosPanel onBack={goBack} />;
     if (viewMode === 'qrcode') return <QRCodePanel onBack={goBack} />;
     if (viewMode === 'barcode') return <BarcodePanel onBack={goBack} />;
-    if (viewMode === 'emoji') return <Suspense fallback={<div style={{ padding: '20px', color: '#888' }}>Loading...</div>}><EmojiPanel onBack={goBack} /></Suspense>;
+    if (viewMode === 'emoji') return <Suspense fallback={<div className="empty-state-box"><Loader size={28} strokeWidth={1} /><p>Loading...</p></div>}><EmojiPanel onBack={goBack} /></Suspense>;
     if (viewMode === 'icon') return <IconSearchPanel onBack={goBack} />;
-    if (viewMode === 'chart') return <Suspense fallback={<div style={{ padding: '20px', color: '#888' }}>Loading...</div>}><ChartPanel onBack={goBack} /></Suspense>;
+    if (viewMode === 'chart') return <Suspense fallback={<div className="empty-state-box"><Loader size={28} strokeWidth={1} /><p>Loading...</p></div>}><ChartPanel onBack={goBack} /></Suspense>;
 
     // --- DEFAULT VIEW ---
     return (
@@ -238,8 +238,10 @@ export function ElementsPanel() {
                         </button>
                     ))}
                     {filteredItems.length === 0 && (
-                        <div className="empty-state" style={{ textAlign: 'center', padding: '20px', color: '#888' }}>
-                            No elements found
+                        <div className="empty-state-box">
+                            <SearchX size={28} strokeWidth={1} />
+                            <p>No elements found</p>
+                            <span>Try a different search or category</span>
                         </div>
                     )}
                 </div>

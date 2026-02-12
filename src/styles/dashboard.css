@@ -142,7 +142,7 @@ body.dashboard-page {
 .search-box input {
   background: transparent;
   border: none;
-  color: white;
+  color: var(--text-primary);
   width: 100%;
   outline: none;
 }
@@ -168,9 +168,153 @@ body.dashboard-page {
 
 .tab.active {
   background: var(--bg-tertiary);
-  color: white;
+  color: var(--text-primary);
 }
 
 .tab:hover:not(.active) {
-  background: rgba(255, 255, 255, 0.05);
+  background: var(--bg-hover);
+}
+
+.tab {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* Dashboard Sections */
+.dashboard-section {
+  margin-bottom: 32px;
+}
+
+.dashboard-section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.dashboard-section-header h3 {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin: 0;
+  color: var(--text-primary);
+}
+
+.btn-text-sm {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  background: transparent;
+  border: none;
+  color: var(--text-secondary);
+  font-size: 0.8rem;
+  cursor: pointer;
+  padding: 4px 8px;
+  border-radius: 4px;
+  transition: all 0.15s;
+}
+
+.btn-text-sm:hover {
+  color: #ef4444;
+  background: rgba(239, 68, 68, 0.1);
+}
+
+/* Recent Projects Grid */
+.recent-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 12px;
+}
+
+.recent-card {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.recent-card:hover {
+  border-color: var(--primary-color);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.recent-card-icon {
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  background: var(--bg-tertiary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--primary-color);
+  flex-shrink: 0;
+}
+
+.recent-card-info {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.recent-card-name {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.recent-card-date {
+  font-size: 0.7rem;
+  color: var(--text-secondary);
+}
+
+/* Card Image Wrap (hover zoom) */
+.card-img-wrap {
+  overflow: hidden;
+  height: 180px;
+  background: var(--bg-tertiary);
+}
+
+.card-img-wrap .card-img {
+  transition: transform 0.3s ease;
+}
+
+.card:hover .card-img-wrap .card-img {
+  transform: scale(1.05);
+}
+
+.card-category {
+  font-size: 0.7rem;
+  color: var(--primary-light);
+  text-transform: uppercase;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  margin-bottom: 4px;
+}
+
+.card-meta {
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+}
+
+/* Dashboard Responsive */
+@media (max-width: 768px) {
+  .dashboard-container { padding: 20px 12px; }
+  .dashboard-header { flex-direction: column; gap: 12px; align-items: flex-start; }
+  .controls-section { flex-direction: column; }
+  .search-box { width: 100%; }
+  .tabs { overflow-x: auto; flex-wrap: nowrap; }
+  .template-grid { grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); }
+  .recent-grid { grid-template-columns: 1fr 1fr; }
 }

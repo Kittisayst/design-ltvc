@@ -27,6 +27,7 @@ export function ViewOptions() {
                 className={`icon-btn ${showRulers ? 'active' : ''}`}
                 onClick={handleToggleRulers}
                 title="Toggle Rulers"
+                aria-label="Toggle Rulers"
             >
                 <Ruler size={16} />
             </button>
@@ -34,6 +35,7 @@ export function ViewOptions() {
                 className={`icon-btn ${gridVisible ? 'active' : ''}`}
                 onClick={handleToggleGrid}
                 title="Toggle Grid"
+                aria-label="Toggle Grid"
             >
                 <Grid3x3 size={16} />
             </button>
@@ -41,6 +43,7 @@ export function ViewOptions() {
                 className="icon-btn"
                 onClick={toggleTheme}
                 title={theme === 'dark' ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
+                aria-label="Toggle Theme"
             >
                 {theme === 'dark' ? <Sun size={16} /> : <Moon size={16} />}
             </button>

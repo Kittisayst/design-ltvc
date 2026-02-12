@@ -11,7 +11,7 @@
   align-items: center;
   gap: 8px;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
-  z-index: 1000;
+  z-index: var(--z-floating);
   transform: translateZ(0);
   pointer-events: auto;
 }
@@ -31,7 +31,7 @@
 }
 
 .ft-btn:hover {
-  background: rgba(255, 255, 255, 0.1);
+  background: var(--bg-hover);
   color: var(--primary-color);
 }
 
@@ -65,7 +65,7 @@
 
 .ft-select:hover {
   border-color: var(--primary-color);
-  background: rgba(255, 255, 255, 0.05);
+  background: var(--bg-hover);
 }
 
 .ft-select option {

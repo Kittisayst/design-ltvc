@@ -46,7 +46,7 @@
   left: 0;
   width: 20px;
   height: 20px;
-  background: #e5e7eb;
+  background: var(--bg-tertiary);
   z-index: 11;
   border-right: 1px solid var(--border-color);
   border-bottom: 1px solid var(--border-color);
@@ -90,7 +90,7 @@
   align-items: center;
   gap: 16px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-  z-index: 1000;
+  z-index: var(--z-floating);
   animation: slideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
@@ -109,8 +109,8 @@
   width: 32px;
   height: 32px;
   border-radius: 50%;
-  background: rgba(255, 255, 255, 0.1);
-  color: white;
+  background: var(--bg-hover);
+  color: var(--text-primary);
   border: none;
   cursor: pointer;
   display: flex;

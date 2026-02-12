@@ -89,6 +89,7 @@ export function ZoomControls() {
                 className={`icon-btn ${isDrawMode ? 'active' : ''}`}
                 onClick={handleDrawMode}
                 title="Free Drawing"
+                aria-label="Free Drawing"
             >
                 <Pencil size={18} />
             </button>
@@ -96,7 +97,8 @@ export function ZoomControls() {
             <button
                 className={`icon-btn ${isPenMode ? 'active' : ''}`}
                 onClick={handlePenTool}
-                title="Pen Tool (Click to add points, drag for curves, double-click to finish)"
+                title="Pen Tool"
+                aria-label="Pen Tool"
             >
                 <PenLine size={18} />
             </button>
@@ -107,104 +109,51 @@ export function ZoomControls() {
                 className={`icon-btn ${isHandMode ? 'active' : ''}`}
                 onClick={handleHandTool}
                 title="Hand Tool (Space)"
+                aria-label="Hand Tool"
             >
                 <Hand size={18} />
             </button>
 
             <div className="separator-vertical"></div>
 
-            <button className="icon-btn" onClick={handleZoomOut} title="Zoom Out">
+            <button className="icon-btn" onClick={handleZoomOut} title="Zoom Out" aria-label="Zoom Out">
                 <Minus size={18} />
             </button>
 
             {/* Zoom Dropdown */}
             <div className="zoom-dropdown-container" ref={dropdownRef} style={{ position: 'relative' }}>
                 <button
-                    className="zoom-display-btn"
+                    className="zoom-level-btn"
                     onClick={() => setShowDropdown(!showDropdown)}
-                    style={{
-                        display: 'flex',
-                        alignItems: 'center',
-                        gap: '4px',
-                        background: 'transparent',
-                        border: 'none',
-                        color: 'white',
-                        fontSize: '14px',
-                        cursor: 'pointer',
-                        padding: '4px 8px',
-                        borderRadius: '4px',
-                        minWidth: '70px',
-                        justifyContent: 'center'
-                    }}
+                    aria-label={`Zoom level ${zoomLevel}%`}
                 >
                     {zoomLevel}% <ChevronDown size={12} />
                 </button>
 
                 {showDropdown && (
-                    <div className="zoom-dropdown-menu" style={{
-                        position: 'absolute',
-                        top: '100%',
-                        left: '50%',
-                        transform: 'translateX(-50%)',
-                        marginTop: '8px',
-                        background: '#2b2d30',
-                        border: '1px solid #3e4042',
-                        borderRadius: '6px',
-                        padding: '4px 0',
-                        minWidth: '120px',
-                        boxShadow: '0 4px 12px rgba(0,0,0,0.3)',
-                        zIndex: 1000,
-                        display: 'flex',
-                        flexDirection: 'column',
-                        whiteSpace: 'nowrap'
-                    }}>
+                    <div className="zoom-dropdown-menu">
                         {[25, 50, 75, 100, 150, 200, 300].map(val => (
                             <button
                                 key={val}
+                                className="zoom-dropdown-item"
                                 onClick={() => handlePresetZoom(val)}
-                                style={{
-                                    background: 'transparent',
-                                    border: 'none',
-                                    color: '#e0e0e0',
-                                    padding: '6px 16px',
-                                    textAlign: 'left',
-                                    cursor: 'pointer',
-                                    fontSize: '13px',
-                                    width: '100%'
-                                }}
-                                onMouseEnter={(e) => e.target.style.background = '#3e4042'}
-                                onMouseLeave={(e) => e.target.style.background = 'transparent'}
                             >
                                 {val}%
                             </button>
                         ))}
-                        <div style={{ height: '1px', background: '#3e4042', margin: '4px 0' }}></div>
-                        <button
-                            onClick={handleFit}
-                            style={{
-                                background: 'transparent',
-                                border: 'none',
-                                color: '#e0e0e0',
-                                padding: '6px 16px',
-                                textAlign: 'left',
-                                cursor: 'pointer',
-                                fontSize: '13px',
-                                width: '100%'
-                            }}
-                            onMouseEnter={(e) => e.target.style.background = '#3e4042'}
-                            onMouseLeave={(e) => e.target.style.background = 'transparent'}
-                        >
+                        <div className="zoom-dropdown-divider"></div>
+                        <button className="zoom-dropdown-item" onClick={handleFit}>
                             Fit to Screen
                         </button>
                     </div>
                 )}
             </div>
 
-            <button className="icon-btn" onClick={handleZoomIn} title="Zoom In">
+            <button className="icon-btn" onClick={handleZoomIn} title="Zoom In" aria-label="Zoom In">
                 <Plus size={18} />
             </button>
 
-            <button className="icon-btn" onClick={handleZoomReset} title="Reset Zoom">
+            <button className="icon-btn" onClick={handleZoomReset} title="Reset Zoom" aria-label="Reset Zoom">
                 <Maximize size={18} />
             </button>
         </div>

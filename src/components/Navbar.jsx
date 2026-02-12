@@ -11,14 +11,14 @@ export function Navbar({ onOpenShortcuts, onOpenExport, onOpenResize }) {
         <nav className="navbar">
             {/* Left Section */}
             <div className="nav-left">
-                <Link to="/" className="icon-btn nav-link-btn" title="Back to Dashboard">
+                <Link to="/" className="icon-btn nav-link-btn" title="Back to Dashboard" aria-label="Back to Dashboard">
                     <LayoutGrid size={20} />
                 </Link>
                 <Link to="/" className="logo nav-brand">CanvasPro</Link>
 
                 {/* Canvas Size Controls */}
-                <div style={{ borderRight: '1px solid var(--border-color)', paddingRight: '12px', marginRight: '12px' }}>
-                    <button id="btn-open-resize" className="btn btn-sm" title="Resize Canvas" onClick={onOpenResize}>
+                <div className="nav-divider-right">
+                    <button id="btn-open-resize" className="btn btn-sm" title="Resize Canvas" aria-label="Resize Canvas" onClick={onOpenResize}>
                         <Scaling size={16} />
                         <span>Resize</span>
                     </button>
@@ -37,7 +37,7 @@ export function Navbar({ onOpenShortcuts, onOpenExport, onOpenResize }) {
 
             {/* Right Section */}
             <div className="nav-right nav-right-group">
-                <button className="icon-btn" onClick={onOpenShortcuts} title="Keyboard Shortcuts">
+                <button className="icon-btn" onClick={onOpenShortcuts} title="Keyboard Shortcuts" aria-label="Keyboard Shortcuts">
                     <Keyboard size={18} />
                 </button>
                 <div className="separator-vertical"></div>
