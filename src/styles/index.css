@@ -1,0 +1,14 @@
+/* Design LTVC - Main Stylesheet */
+/* Split from monolithic style.css into modular files */
+
+@import './variables.css';
+@import './base.css';
+@import './navbar.css';
+@import './sidebar.css';
+@import './canvas.css';
+@import './layers.css';
+@import './floating-toolbar.css';
+@import './color-picker.css';
+@import './modals.css';
+@import './dashboard.css';
+@import './welcome.css';

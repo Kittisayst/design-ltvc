@@ -1,4 +1,5 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { useCanvas } from './context/CanvasContext';
 import { Navbar } from './components/Navbar.jsx';
 import { FloatingToolbar } from './components/FloatingToolbar.jsx';
@@ -13,6 +14,8 @@ import { ShortcutsModal } from './components/ShortcutsModal.jsx';
 import { ExportModal } from './components/ExportModal.jsx';
 import { ResizeModal } from './components/ResizeModal.jsx';
 import { CropToolbar } from './components/canvas/CropToolbar.jsx';
+import { PageNavigator } from './components/PageNavigator.jsx';
+import { WelcomeScreen } from './components/WelcomeScreen.jsx';
 
 import { useStore } from './store/useStore';
 
@@ -22,7 +25,6 @@ export default function App() {
         activeTab,
         setActiveTab,
         showRulers,
-        setShowRulers,
         showShortcuts,
         setShowShortcuts,
         showExport,
@@ -33,8 +35,14 @@ export default function App() {
         setColorPickerVisible,
         colorPickerAnchor,
         activeColorProp,
-        colorPickerAlign
+        colorPickerAlign,
+        theme,
     } = useStore();
+
+    // Initialize theme on mount
+    useEffect(() => {
+        document.documentElement.setAttribute('data-theme', theme);
+    }, []);
 
     const {
         canvasManager,
@@ -42,19 +50,22 @@ export default function App() {
         setCurrentColor,
     } = useCanvas();
 
-    // Template Loading Logic
+    const [searchParams] = useSearchParams();
+    const [showWelcome, setShowWelcome] = useState(true);
+
+    // Template Loading Logic — auto-dismiss welcome if template param exists
     useEffect(() => {
         if (!canvasManager) return;
 
-        const urlParams = new URLSearchParams(window.location.search);
-        const templatePath = urlParams.get('template');
+        const templatePath = searchParams.get('template');
         if (templatePath) {
+            setShowWelcome(false);
             fetch(templatePath)
                 .then(res => res.json())
                 .then(json => canvasManager.loadProject(json))
                 .catch(err => console.error('Failed to load template:', err));
         }
-    }, [canvasManager]);
+    }, [canvasManager, searchParams]);
 
     const handleColorChange = (color) => {
         setCurrentColor(color);
@@ -65,10 +76,13 @@ export default function App() {
 
     return (
         <div id="app-react-root">
+            {showWelcome && canvasManager && (
+                <WelcomeScreen
+                    canvasManager={canvasManager}
+                    onDismiss={() => setShowWelcome(false)}
+                />
+            )}
             <Navbar
-                canvasManager={canvasManager}
-                showRulers={showRulers}
-                setShowRulers={setShowRulers}
                 onOpenShortcuts={() => setShowShortcuts(true)}
                 onOpenExport={() => setShowExport(true)}
                 onOpenResize={() => setShowResize(true)}
@@ -94,9 +108,9 @@ export default function App() {
                     </div>
                     <div id="elements-wrapper">
                         {activeTab === 'elements' ? (
-                            <ElementsPanel canvasManager={canvasManager} />
+                            <ElementsPanel />
                         ) : (
-                            <TemplatesPanel canvasManager={canvasManager} />
+                            <TemplatesPanel />
                         )}
                     </div>
                 </aside>
@@ -112,12 +126,12 @@ export default function App() {
 
                             {/* Horizontal Ruler */}
                             <div className="ruler-horizontal-container">
-                                <Ruler type="horizontal" canvasManager={canvasManager} />
+                                <Ruler type="horizontal" />
                             </div>
 
                             {/* Vertical Ruler */}
                             <div className="ruler-vertical-container">
-                                <Ruler type="vertical" canvasManager={canvasManager} />
+                                <Ruler type="vertical" />
                             </div>
                         </>
                     )}
@@ -126,26 +140,27 @@ export default function App() {
                         <div className="canvas-container-wrapper">
                             <canvas id="c" ref={canvasRef}></canvas>
                         </div>
+                        <PageNavigator />
                     </main>
                 </div>
 
                 {/* Right Sidebar */}
                 <aside className="sidebar-right">
                     <div className="section-title">Properties</div>
-                    <PropertyPanel canvasManager={canvasManager} />
+                    <PropertyPanel />
 
                     <div className="section-divider"></div>
 
                     <div className="section" style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
                         <div className="section-title">Layers</div>
-                        <LayersPanel canvasManager={canvasManager} />
+                        <LayersPanel />
                     </div>
                 </aside>
             </div>
 
             {/* Floating Toolbar - Self contained */}
             <FloatingToolbar />
-            <CropToolbar canvasManager={canvasManager} />
+            <CropToolbar />
 
             {/* Context Menu - Self contained */}
             <ContextMenu />
