@@ -2,7 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { Check, X } from 'lucide-react';
 import { useCanvas } from '../../context/CanvasContext';
 
-export function CropToolbar({ canvasManager }) {
+export function CropToolbar() {
+    const { canvasManager } = useCanvas();
     const [isVisible, setIsVisible] = useState(false);
 
     useEffect(() => {

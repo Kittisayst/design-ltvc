@@ -5,11 +5,21 @@ export default defineConfig({
     plugins: [react()],
     // Use relative paths ('./') so the app works in a subdirectory (like on GitHub Pages: username.github.io/repo-name)
     base: './',
+    test: {
+        globals: true,
+        environment: 'jsdom',
+        setupFiles: ['./src/__tests__/setup.ts'],
+        exclude: ['e2e/**', 'node_modules/**'],
+    },
     build: {
         rollupOptions: {
-            input: {
-                main: 'index.html',
-                canvas: 'canvas.html'
+            output: {
+                manualChunks: {
+                    'vendor-react': ['react', 'react-dom', 'react-router-dom'],
+                    'vendor-fabric': ['fabric'],
+                    'vendor-pdf': ['jspdf'],
+                    'vendor-chart': ['chart.js', 'react-chartjs-2'],
+                }
             }
         }
     },

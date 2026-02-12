@@ -24,7 +24,6 @@ export function CanvasProvider({ children }) {
             backgroundColor: '#ffffff'
         });
         setCanvasManager(cm);
-        window.canvasManager = cm;
 
         return () => {
             cm.dispose();

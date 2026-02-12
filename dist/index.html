@@ -2,53 +2,23 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Dashboard - Poster Designer Pro</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link
-        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+Lao:wght@400;700&display=swap"
-        rel="stylesheet">
-
-  <script type="module" crossorigin src="./assets/main-ISpecXMG.js"></script>
-  <link rel="modulepreload" crossorigin href="./assets/style-IL42Afh-.js">
-  <link rel="stylesheet" crossorigin href="./assets/style-Lyk3of6h.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Poster Designer Pro</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+Lao:wght@400;700&family=Noto+Serif+Lao:wght@400;700&family=Noto+Sans+Lao+Looped:wght@400;700&display=swap"
+    rel="stylesheet">
+  <script type="module" crossorigin src="./assets/index-BPnQP7Gb.js"></script>
+  <link rel="modulepreload" crossorigin href="./assets/vendor-pdf-5QI-yuQZ.js">
+  <link rel="modulepreload" crossorigin href="./assets/vendor-react-CmRz-VSB.js">
+  <link rel="modulepreload" crossorigin href="./assets/vendor-chart-MOSL2yxr.js">
+  <link rel="stylesheet" crossorigin href="./assets/index-CStpC-7S.css">
 </head>
 
-<body class="dashboard-page">
-    <div class="dashboard-container">
-        <div class="dashboard-header">
-            <div class="dashboard-logo">CanvasPro Dashboard</div>
-            <a href="canvas.html" class="btn-create">
-                <i data-lucide="plus" style="width: 20px; height: 20px;"></i>
-                Create Blank
-            </a>
-        </div>
-        <div class="controls-section">
-            <div class="search-box">
-                <i data-lucide="search" style="width: 20px; height: 20px; color: var(--text-secondary);"></i>
-                <input type="text" id="search-input" placeholder="Search templates...">
-            </div>
-
-            <div class="tabs" id="category-tabs">
-                <button class="tab active" data-category="all">All</button>
-                <button class="tab" data-category="Social Media">Social Media</button>
-                <button class="tab" data-category="Presentation">Presentations</button>
-                <button class="tab" data-category="Poster">Posters</button>
-                <button class="tab" data-category="Infographic">Infographics</button>
-            </div>
-        </div>
-
-        <div class="template-grid" id="template-grid">
-            <!-- Loading Spinner -->
-            <div class="loading-state">
-                <div class="spinner"></div>
-                <p>Loading templates...</p>
-            </div>
-        </div>
-    </div>
-
+<body>
+  <div id="app"></div>
 </body>
 
 </html>

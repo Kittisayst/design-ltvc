@@ -1,6 +1,7 @@
 import React, { useState, useEffect, memo } from 'react';
 import { GripVertical, Type, Image, Square, Circle, Folder, Box, Lock, Unlock, Eye, EyeOff } from 'lucide-react';
 import * as fabric from 'fabric';
+import { useCanvas } from '../context/CanvasContext';
 
 // Extracted LayerItem for performance
 const LayerItem = memo(({
@@ -109,7 +110,8 @@ const LayerItem = memo(({
     );
 });
 
-export function LayersPanel({ canvasManager }) {
+export function LayersPanel() {
+    const { canvasManager } = useCanvas();
     const [layers, setLayers] = useState([]);
     const [selectedIds, setSelectedIds] = useState([]);
     const [draggedIndex, setDraggedIndex] = useState(null);

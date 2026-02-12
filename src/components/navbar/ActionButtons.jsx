@@ -1,7 +1,9 @@
 import { Copy, Lock, Download, FolderOpen, Save } from 'lucide-react';
 import { useRef } from 'react';
+import { useCanvas } from '../../context/CanvasContext';
 
-export function ActionButtons({ canvasManager, onExport }) {
+export function ActionButtons({ onExport }) {
+    const { canvasManager } = useCanvas();
 
     const fileInputRef = useRef(null);
 

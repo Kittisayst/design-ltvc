@@ -1,22 +1,20 @@
 import { LayoutGrid, Scaling, Keyboard } from 'lucide-react';
-import { useStore } from '../store/useStore';
+import { Link } from 'react-router-dom';
 import { ZoomControls } from './navbar/ZoomControls';
 import { ViewOptions } from './navbar/ViewOptions';
 import { UndoRedoControls } from './navbar/UndoRedoControls';
-
 import { ActionButtons } from './navbar/ActionButtons';
 import { BackgroundControl } from './navbar/BackgroundControl';
 
-export function Navbar({ canvasManager, onOpenShortcuts, onOpenExport, onOpenResize }) {
-    const { showRulers, setShowRulers } = useStore();
+export function Navbar({ onOpenShortcuts, onOpenExport, onOpenResize }) {
     return (
         <nav className="navbar">
             {/* Left Section */}
             <div className="nav-left">
-                <a href="index.html" className="icon-btn nav-link-btn" title="Back to Dashboard">
+                <Link to="/" className="icon-btn nav-link-btn" title="Back to Dashboard">
                     <LayoutGrid size={20} />
-                </a>
-                <a href="index.html" className="logo nav-brand">CanvasPro</a>
+                </Link>
+                <Link to="/" className="logo nav-brand">CanvasPro</Link>
 
                 {/* Canvas Size Controls */}
                 <div style={{ borderRight: '1px solid var(--border-color)', paddingRight: '12px', marginRight: '12px' }}>
@@ -29,18 +27,12 @@ export function Navbar({ canvasManager, onOpenShortcuts, onOpenExport, onOpenRes
 
             {/* Center Section */}
             <div className="nav-center">
-
-
                 <div className="separator-vertical"></div>
-
-                <ActionButtons canvasManager={canvasManager} onExport={onOpenExport} />
-
+                <ActionButtons onExport={onOpenExport} />
                 <div className="separator-vertical"></div>
-                <UndoRedoControls canvasManager={canvasManager} />
+                <UndoRedoControls />
                 <div className="separator-vertical"></div>
-
-                {/* Zoom Controls */}
-                <ZoomControls canvasManager={canvasManager} />
+                <ZoomControls />
             </div>
 
             {/* Right Section */}
@@ -49,13 +41,9 @@ export function Navbar({ canvasManager, onOpenShortcuts, onOpenExport, onOpenRes
                     <Keyboard size={18} />
                 </button>
                 <div className="separator-vertical"></div>
-                <BackgroundControl canvasManager={canvasManager} />
+                <BackgroundControl />
                 <div className="separator-vertical"></div>
-                <ViewOptions
-                    canvasManager={canvasManager}
-                    showRulers={showRulers}
-                    setShowRulers={setShowRulers}
-                />
+                <ViewOptions />
             </div>
         </nav>
     );

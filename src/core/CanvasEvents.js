@@ -91,14 +91,21 @@ export class CanvasEvents {
                 saveHistory(label, e.target);
             }
         });
+        // Throttled guide rendering during object:moving (16ms ≈ 60fps)
+        let movingRAF = null;
         this.canvas.on('object:moving', (e) => {
             triggerUpdate();
 
-            // Grid Snapping
+            // Grid Snapping (runs every frame for accuracy)
             if (this.cm.snapToGrid) this.cm.snapToGrid(e.target);
 
-            // Handle guidelines if implemented in manager
-            if (this.cm.handleObjectMoving) this.cm.handleObjectMoving(e);
+            // Throttle guideline rendering via rAF
+            if (!movingRAF) {
+                movingRAF = requestAnimationFrame(() => {
+                    if (this.cm.handleObjectMoving) this.cm.handleObjectMoving(e);
+                    movingRAF = null;
+                });
+            }
         });
         this.canvas.on('object:scaling', triggerUpdate);
         this.canvas.on('object:rotating', triggerUpdate);

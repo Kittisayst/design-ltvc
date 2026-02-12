@@ -2,8 +2,10 @@ import React, { useState, useEffect, useRef } from 'react';
 import { LayoutTemplate, Search, Plus, Trash2, Save, ChevronLeft, ChevronRight } from 'lucide-react';
 import './PanelCommon.css';
 import './TemplatesPanel.css';
+import { useCanvas } from '../context/CanvasContext';
 
-export function TemplatesPanel({ canvasManager }) {
+export function TemplatesPanel() {
+    const { canvasManager } = useCanvas();
     const [activeTab, setActiveTab] = useState('presets'); // 'presets' | 'custom'
     const [templates, setTemplates] = useState([]); // Presets
     const [customTemplates, setCustomTemplates] = useState([]); // My Templates

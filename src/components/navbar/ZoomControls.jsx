@@ -1,9 +1,12 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Pencil, Hand, Minus, Plus, Maximize, ChevronDown } from 'lucide-react';
+import { Pencil, PenLine, Hand, Minus, Plus, Maximize, ChevronDown } from 'lucide-react';
+import { useCanvas } from '../../context/CanvasContext';
 
-export function ZoomControls({ canvasManager }) {
+export function ZoomControls() {
+    const { canvasManager } = useCanvas();
     const [zoomLevel, setZoomLevel] = useState(100);
     const [isDrawMode, setIsDrawMode] = useState(false);
+    const [isPenMode, setIsPenMode] = useState(false);
     const [isHandMode, setIsHandMode] = useState(false);
     const [showDropdown, setShowDropdown] = useState(false);
 
@@ -39,8 +42,22 @@ export function ZoomControls({ canvasManager }) {
             canvasManager.disableDrawingMode();
             setIsDrawMode(false);
         } else {
+            if (isPenMode) { canvasManager.penToolManager.disable(); setIsPenMode(false); }
             canvasManager.enableDrawingMode();
             setIsDrawMode(true);
+            setIsHandMode(false);
+        }
+    };
+
+    const handlePenTool = () => {
+        if (!canvasManager) return;
+        if (isPenMode) {
+            canvasManager.penToolManager.disable();
+            setIsPenMode(false);
+        } else {
+            if (isDrawMode) { canvasManager.disableDrawingMode(); setIsDrawMode(false); }
+            canvasManager.penToolManager.enable();
+            setIsPenMode(true);
             setIsHandMode(false);
         }
     };
@@ -74,6 +91,14 @@ export function ZoomControls({ canvasManager }) {
                 title="Free Drawing"
             >
                 <Pencil size={18} />
+            </button>
+
+            <button
+                className={`icon-btn ${isPenMode ? 'active' : ''}`}
+                onClick={handlePenTool}
+                title="Pen Tool (Click to add points, drag for curves, double-click to finish)"
+            >
+                <PenLine size={18} />
             </button>
 
             <div className="separator-vertical"></div>

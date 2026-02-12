@@ -1,11 +1,6 @@
-import { Canvas, Gradient, Rect, util, PencilBrush, FabricImage, ActiveSelection, loadSVGFromString, IText } from 'fabric';
-import { jsPDF } from 'jspdf';
+import { Canvas, Gradient, Rect, util, FabricImage, ActiveSelection } from 'fabric';
 import { getCropControls } from './CropControls.js';
-// ... imports
-
-
 import { NotificationManager } from './NotificationManager.js';
-import TextExtractionService from '../services/TextExtractionService.js';
 import { CanvasViewport } from './CanvasViewport.js';
 import { CanvasEvents } from './CanvasEvents.js';
 import { LayoutManager } from './LayoutManager.js';
@@ -16,9 +11,12 @@ import { ShapeManager } from './managers/ShapeManager.js';
 import { FilterManager } from './managers/FilterManager.js';
 import { FontManager } from './managers/FontManager.js';
 import { HistoryManager } from './managers/HistoryManager.js';
-import VectorizationService from '../services/VectorizationService.js';
-import ColorService from '../services/ColorService.js';
-import UpscalingService from '../services/UpscalingService.js';
+import { ExportManager } from './managers/ExportManager.js';
+import { DrawingManager } from './managers/DrawingManager.js';
+import { PenToolManager } from './managers/PenToolManager.js';
+import { TextOnPathManager } from './managers/TextOnPathManager.js';
+import { PageManager } from './managers/PageManager.js';
+import { AIManager } from './managers/AIManager.js';
 
 export class CanvasManager {
     constructor(canvasId, options = {}) {
@@ -28,6 +26,7 @@ export class CanvasManager {
             height: 600,
             backgroundColor: '#18191b', // Dark background for infinite canvas
             preserveObjectStacking: true,
+            enableRetinaScaling: true,
             ...options
         });
 
@@ -41,8 +40,6 @@ export class CanvasManager {
         // Setup Workspace (The Page)
         this.initWorkspace();
 
-
-
         // Modules
         this.viewport = new CanvasViewport(this);
         this.events = new CanvasEvents(this);
@@ -52,11 +49,14 @@ export class CanvasManager {
         this.objectManager = new ObjectManager(this);
         this.shapeManager = new ShapeManager(this);
         this.filterManager = new FilterManager(this);
-        this.filterManager = new FilterManager(this);
         this.fontManager = new FontManager(this);
         this.historyManager = new HistoryManager(this);
-
-
+        this.exportManager = new ExportManager(this);
+        this.drawingManager = new DrawingManager(this);
+        this.penToolManager = new PenToolManager(this);
+        this.textOnPathManager = new TextOnPathManager(this);
+        this.pageManager = new PageManager(this);
+        this.aiManager = new AIManager(this);
 
         // Initial Fit (delegated to viewport)
         setTimeout(() => this.fitToScreen(), 100);
@@ -236,38 +236,11 @@ export class CanvasManager {
         return this.canvas.getActiveObject();
     }
 
-    // Drawing Mode Support
-    enableDrawingMode() {
-        if (!this.canvas) return;
-        this.canvas.isDrawingMode = true;
-        this.canvas.discardActiveObject();
-        this.canvas.requestRenderAll();
-
-        if (!this.canvas.freeDrawingBrush) {
-            this.canvas.freeDrawingBrush = new PencilBrush(this.canvas);
-        }
-
-        // Defaults
-        this.canvas.freeDrawingBrush.width = 5;
-        this.canvas.freeDrawingBrush.color = '#000000';
-    }
-
-    disableDrawingMode() {
-        if (!this.canvas) return;
-        this.canvas.isDrawingMode = false;
-    }
-
-    setBrushColor(color) {
-        if (this.canvas && this.canvas.freeDrawingBrush) {
-            this.canvas.freeDrawingBrush.color = color;
-        }
-    }
-
-    setBrushWidth(width) {
-        if (this.canvas && this.canvas.freeDrawingBrush) {
-            this.canvas.freeDrawingBrush.width = parseInt(width, 10);
-        }
-    }
+    // Drawing Mode (delegated to DrawingManager)
+    enableDrawingMode() { this.drawingManager.enableDrawingMode(); }
+    disableDrawingMode() { this.drawingManager.disableDrawingMode(); }
+    setBrushColor(color) { this.drawingManager.setBrushColor(color); }
+    setBrushWidth(width) { this.drawingManager.setBrushWidth(width); }
 
     initWorkspace() {
 
@@ -292,24 +265,12 @@ export class CanvasManager {
         });
 
         // Native Background Implementation
-        // Native Background Implementation
         this.canvas.backgroundImage = workspace;
         this.canvas.requestRenderAll();
 
         this.canvas.backgroundColor = '#18191b'; // Infinite void color
         this.workspace = workspace; // Keep reference for LayoutManager/Export
 
-
-
-
-
-    }
-
-    setBackgroundColor(color) {
-        if (this.workspace) {
-            this.workspace.set('fill', color);
-            this.canvas.requestRenderAll();
-        }
     }
 
     // Event Helper (Proxy for UI)
@@ -382,7 +343,6 @@ export class CanvasManager {
 
     bringForward() { this.objectManager.bringForward(); }
     sendBackward() { this.objectManager.sendBackward(); }
-    bringToFront() { this.objectManager.bringToFront(); }
     bringToFront() { this.objectManager.bringToFront(); }
     sendToBack() { this.objectManager.sendToBack(); }
 
@@ -480,7 +440,7 @@ export class CanvasManager {
         }
     }
 
-    setBackgroundGradient(start, end, direction, width, height) {
+    setBackgroundGradient(start, end, direction) {
         const w = this.originalWidth;
         const h = this.originalHeight;
 
@@ -500,6 +460,73 @@ export class CanvasManager {
         if (this.workspace) {
             this.workspace.set('fill', gradient);
             this.canvas.requestRenderAll();
+        }
+    }
+
+    /**
+     * Advanced gradient: supports linear/radial, multiple color stops, angle.
+     * @param {object} config - { type, angle, colorStops: [{offset, color}], radialRadius }
+     */
+    setAdvancedGradient(config) {
+        const { type = 'linear', angle = 0, colorStops = [], target = 'background' } = config;
+        const w = this.originalWidth;
+        const h = this.originalHeight;
+
+        let coords;
+        if (type === 'radial') {
+            coords = { x1: w / 2, y1: h / 2, x2: w / 2, y2: h / 2, r1: 0, r2: Math.max(w, h) / 2 };
+        } else {
+            // Convert angle to coords
+            const rad = (angle * Math.PI) / 180;
+            const cos = Math.cos(rad);
+            const sin = Math.sin(rad);
+            const halfW = w / 2;
+            const halfH = h / 2;
+            coords = {
+                x1: halfW - cos * halfW,
+                y1: halfH - sin * halfH,
+                x2: halfW + cos * halfW,
+                y2: halfH + sin * halfH,
+            };
+        }
+
+        const gradient = new Gradient({
+            type,
+            coords,
+            colorStops: colorStops.map(s => ({ offset: s.offset, color: s.color }))
+        });
+
+        if (target === 'background' && this.workspace) {
+            this.workspace.set('fill', gradient);
+            this.canvas.requestRenderAll();
+        } else if (target === 'object') {
+            const active = this.getActiveObject();
+            if (active) {
+                // For objects, coords are relative to object dimensions
+                const ow = active.width || 100;
+                const oh = active.height || 100;
+                let objCoords;
+                if (type === 'radial') {
+                    objCoords = { x1: ow / 2, y1: oh / 2, x2: ow / 2, y2: oh / 2, r1: 0, r2: Math.max(ow, oh) / 2 };
+                } else {
+                    const rad = (angle * Math.PI) / 180;
+                    const cos = Math.cos(rad);
+                    const sin = Math.sin(rad);
+                    objCoords = {
+                        x1: ow / 2 - cos * ow / 2,
+                        y1: oh / 2 - sin * oh / 2,
+                        x2: ow / 2 + cos * ow / 2,
+                        y2: oh / 2 + sin * oh / 2,
+                    };
+                }
+                const objGradient = new Gradient({
+                    type,
+                    coords: objCoords,
+                    colorStops: colorStops.map(s => ({ offset: s.offset, color: s.color }))
+                });
+                active.set('fill', objGradient);
+                this.canvas.requestRenderAll();
+            }
         }
     }
 
@@ -532,110 +559,10 @@ export class CanvasManager {
         }
     }
 
-    /**
-     * Vectorizes the currently active image and replaces it with a path-based group.
-     */
-    async vectorizeActiveImage() {
-        const active = this.getActiveObject();
-        if (!active || (active.type !== 'image' && active.type !== 'fabric-image')) {
-            NotificationManager.warning("Select an image to vectorize.");
-            return;
-        }
-
-        NotificationManager.info("Vectorizing image. This may take a moment...");
-
-        try {
-            const src = active.getSrc();
-            // 1. Trace image to SVG string
-            const svgString = await VectorizationService.trace(src);
-
-            // 2. Load SVG string into Fabric objects (Fabric 6 uses top-level async functions)
-            const { objects, options } = await loadSVGFromString(svgString);
-            const group = util.groupSVGElements(objects, options);
-
-            // 3. Position and scale based on original image
-            const originalMatrix = active.calcTransformMatrix();
-            const qr = util.qrDecompose(originalMatrix);
-
-            // Match original transform as closely as possible
-            group.set({
-                left: qr.translateX,
-                top: qr.translateY,
-                angle: qr.angle,
-                scaleX: qr.scaleX * (active.width / group.width),
-                scaleY: qr.scaleY * (active.height / group.height),
-                flipX: qr.flipX,
-                flipY: qr.flipY,
-                originX: 'center',
-                originY: 'center',
-                selectable: true,
-                evented: true
-            });
-
-            // 4. Swap objects
-            this.canvas.add(group);
-            this.canvas.remove(active);
-            this.canvas.setActiveObject(group);
-            this.canvas.requestRenderAll();
-
-            this.historyManager.saveState('Vectorize Image');
-            NotificationManager.success("Image vectorized successfully!");
-        } catch (error) {
-            console.error("Vectorization failed:", error);
-            NotificationManager.error("Failed to vectorize image.");
-        }
-    }
-
-    /**
-     * Extracts a color palette from the currently active image.
-     * @returns {Promise<{dominant: string, palette: string[]}>}
-     */
-    async extractPaletteFromActiveImage() {
-        const active = this.getActiveObject();
-        if (!active || (active.type !== 'image' && active.type !== 'fabric-image')) {
-            NotificationManager.warning("Select an image to extract colors.");
-            return null;
-        }
-
-        NotificationManager.info("Extracting color palette...");
-
-        try {
-            const src = active.getSrc();
-            const result = await ColorService.extractColors(src);
-            NotificationManager.success("Colors extracted!");
-            return result;
-        } catch (error) {
-            console.error("Color extraction failed:", error);
-            NotificationManager.error("Failed to extract colors.");
-            return null;
-        }
-    }
-
-    /**
-     * Upscales the currently active image using AI.
-     */
-    async upscaleActiveImage() {
-        const active = this.getActiveObject();
-        if (!active || (active.type !== 'image' && active.type !== 'fabric-image')) {
-            NotificationManager.warning("Select an image to enhance.");
-            return;
-        }
-
-        NotificationManager.info("Enhancing image quality. This may take a minute...");
-
-        try {
-            const src = active.getSrc();
-            const enhancedSrc = await UpscalingService.upscale(src);
-
-            await this.replaceImage(active, enhancedSrc);
-
-            this.historyManager.saveState('Upscale Image');
-            NotificationManager.success("Image enhanced successfully!");
-        } catch (error) {
-            console.error("Upscaling failed:", error);
-            NotificationManager.error("Failed to enhance image.");
-        }
-    }
+    // AI Features (delegated to AIManager)
+    async vectorizeActiveImage() { return this.aiManager.vectorizeActiveImage(); }
+    async extractPaletteFromActiveImage() { return this.aiManager.extractPaletteFromActiveImage(); }
+    async upscaleActiveImage() { return this.aiManager.upscaleActiveImage(); }
 
     addShape(type, options = {}) {
         this.shapeManager.addShape(type, options);
@@ -679,35 +606,15 @@ export class CanvasManager {
 
         if (!img || !shape) return;
 
-        // 1. Calculate Inverse Matrix of the Image to map global points to local image space
-        // Note: activeSelection logic is tricky. The objects inside are relative to the selection group usually?
-        // Wait, Fabric v6 activeSelection: getObjects() returns objects with their own transforms relative to canvas 
-        // IF we didn't transform the selection itself? 
-        // Actually, when in activeSelection, objects usually maintain their own coordinates but are rendered differently.
-        // Let's rely on `o.calcTransformMatrix()` which gives global matrix.
-
-        // We need to clone the shape so we don't mess up the original if we wanted to keep it (but we consume it here).
-        // Cloning is safer to detach from selection.
+        // Clone shape to detach from selection before consuming it
         const shapeClone = await shape.clone();
 
-        // 2. Transform Shape to Image's Local Space
-        // Logic: LocalPoint = InverseImageMatrix * GlobalPoint
-        // We need to transform the entire Object.
-
-        // Get Image Inverse Matrix
+        // Transform shape to image's local coordinate space
         const imgMatrix = img.calcTransformMatrix();
         const imgInverse = util.invertTransform(imgMatrix);
 
-        // Get Shape Global Matrix
         const shapeMatrix = shape.calcTransformMatrix();
-
-        // Combined Matrix: We want Shape -> Canvas -> ImageLocal
-        // Result Matrix = ImageInverse * ShapeMatrix
         const finalMatrix = util.multiplyTransformMatrices(imgInverse, shapeMatrix);
-
-        // Apply this matrix to the clone
-        // Fabric doesn't have "setMatrix" directly exposed easily for all props, 
-        // but `util.qrDecompose` can extract scale/rotate/translate/skew from a matrix.
         const options = util.qrDecompose(finalMatrix);
 
         shapeClone.set({
@@ -722,25 +629,15 @@ export class CanvasManager {
             top: options.translateY,
             originX: 'center', // ClipPath is relative to center of object
             originY: 'center',
-            absolutePositioned: false // We want it relative to the image
-            // Note: qrDecompose returns Center-based transforms? 
-            // Fabric util.multiplyTransformMatrices result depends on origins.
-            // Standard calcTransformMatrix is from Top-Left or Center? 
-            // activeSelection makes it complex.
+            absolutePositioned: false
         });
-
-        // Reset origin of shape to match expected clipPath behavior (centered)
-        // If the Matrix logic is correct, the shapeClone is now in Image Local Coordinates (Center relative to Image Center).
 
         img.clipPath = shapeClone;
 
-        // Remove originals? 
-        // We keep the image, remove the shape.
-        // And discard selection.
+        // Remove shape, keep masked image
         this.canvas.discardActiveObject();
         this.canvas.remove(shape);
 
-        // Image needs to be re-added? No, it's there.
         img.dirty = true;
         this.canvas.requestRenderAll();
 
@@ -748,76 +645,8 @@ export class CanvasManager {
         this.canvas.setActiveObject(img);
     }
 
-    // --- PROFESSIONAL EXPORT SYSTEM ---
-    async exportImage(options = {}) {
-        const { format = 'png', filename = 'design', quality = 1, multiplier = 2 } = options;
-
-        // Temporarily hide workspace border/guides
-        const originalStroke = this.workspace.stroke;
-        this.workspace.set({ stroke: 'transparent' });
-
-        // Hide guidelines
-        const guides = this.canvas.getObjects().filter(obj => obj.excludeFromExport);
-        guides.forEach(g => g.set({ opacity: 0 }));
-
-        // Save and Reset Viewport Logic
-        const originalVPT = this.canvas.viewportTransform.slice();
-        this.canvas.setViewportTransform([1, 0, 0, 1, 0, 0]);
-
-        try {
-            if (format === 'pdf') {
-                const dataURL = this.canvas.toDataURL({
-                    format: 'png',
-                    multiplier: multiplier,
-                    left: 0,
-                    top: 0,
-                    width: this.originalWidth,
-                    height: this.originalHeight,
-                    enableRetinaScaling: false
-                });
-
-                const pdf = new jsPDF({
-                    orientation: this.originalWidth > this.originalHeight ? 'landscape' : 'portrait',
-                    unit: 'px',
-                    format: [this.originalWidth, this.originalHeight]
-                });
-
-                pdf.addImage(dataURL, 'PNG', 0, 0, this.originalWidth, this.originalHeight);
-                pdf.save(`${filename}.pdf`);
-            } else if (format === 'json') {
-                this.exportProject();
-            } else {
-                const dataURL = this.canvas.toDataURL({
-                    format: format,
-                    quality: quality,
-                    multiplier: multiplier,
-                    left: 0,
-                    top: 0,
-                    width: this.originalWidth,
-                    height: this.originalHeight,
-                    enableRetinaScaling: false
-                });
-
-                const link = document.createElement('a');
-                link.href = dataURL;
-                link.download = `${filename}.${format}`;
-                document.body.appendChild(link);
-                link.click();
-                document.body.removeChild(link);
-            }
-
-            NotificationManager.success('Export successful');
-        } catch (err) {
-            console.error(err);
-            NotificationManager.error('Export failed');
-        } finally {
-            // Restore visual state
-            this.canvas.setViewportTransform(originalVPT);
-            this.workspace.set({ stroke: originalStroke });
-            guides.forEach(g => g.set({ opacity: 1 }));
-            this.canvas.requestRenderAll();
-        }
-    }
+    // Export (delegated to ExportManager)
+    async exportImage(options = {}) { return this.exportManager.exportImage(options); }
 
 
     // --- ON-CANVAS CROP SYSTEM ---
@@ -965,75 +794,7 @@ export class CanvasManager {
         return json;
     }
 
-    exportProject() {
-        const json = this.saveProject();
-        json.timestamp = Date.now();
+    exportProject() { this.exportManager.exportProject(); }
 
-        const jsonString = JSON.stringify(json, null, 2);
-        const blob = new Blob([jsonString], { type: 'application/json' });
-        const url = URL.createObjectURL(blob);
-
-        const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
-        const filename = `project-${timestamp}.json`;
-
-        const link = document.createElement('a');
-        link.href = url;
-        link.download = filename;
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-        URL.revokeObjectURL(url);
-    }
-
-    /**
-     * Extracts text from the currently active image using OCR.
-     */
-    async extractTextFromActiveImage() {
-        const activeObject = this.canvas.getActiveObject();
-        if (!activeObject || (activeObject.type !== 'image' && activeObject.type !== 'fabric-image')) {
-            NotificationManager.warning('Please select an image to extract text.');
-            return;
-        }
-
-        try {
-            NotificationManager.info('Scanning image for text... (Supports Lao/English)', 4000);
-
-            const src = activeObject.getSrc();
-            // Use 'lao+eng' to support both languages
-            const text = await TextExtractionService.extractText(src, 'lao+eng', (progress) => {
-                console.log(`OCR Progress: ${Math.round(progress * 100)}%`);
-            });
-
-            if (!text || text.trim().length === 0) {
-                NotificationManager.warning('No text found in the image.');
-                return;
-            }
-
-            // Create a new IText object with the extracted text
-            const textObject = new IText(text, {
-                left: activeObject.left + 20,
-                top: activeObject.top + 20,
-                fontSize: 20,
-                fontFamily: 'Phetsarath OT', // Default to Lao font
-                fill: '#000000',
-            });
-
-            this.canvas.add(textObject);
-            this.canvas.setActiveObject(textObject);
-            this.canvas.renderAll();
-
-            NotificationManager.success('Text extracted successfully!');
-            return text;
-
-        } catch (error) {
-            console.error('Text extraction failed:', error);
-            NotificationManager.error('Failed to extract text.');
-            return null;
-
-        }
-    }
-
-
-
-
+    async extractTextFromActiveImage() { return this.aiManager.extractTextFromActiveImage(); }
 }

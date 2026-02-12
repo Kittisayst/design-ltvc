@@ -1,6 +1,8 @@
 import React, { useEffect, useRef, useState } from 'react';
+import { useCanvas } from '../context/CanvasContext';
 
-export function Ruler({ type = 'horizontal', canvasManager }) {
+export const Ruler = React.memo(function Ruler({ type = 'horizontal' }) {
+    const { canvasManager } = useCanvas();
     const canvasRef = useRef(null);
     const [viewportState, setViewportState] = useState({ zoom: 1, offset: { x: 0, y: 0 } });
 
@@ -216,4 +218,4 @@ export function Ruler({ type = 'horizontal', canvasManager }) {
             }}
         />
     );
-}
+});

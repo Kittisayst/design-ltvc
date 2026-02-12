@@ -1,5 +1,4 @@
 import { create } from 'zustand';
-import { temporal } from 'zundo';
 
 export const useStore = create((set) => ({
     // UI State
@@ -31,4 +30,24 @@ export const useStore = create((set) => ({
     // Extracted Palette State
     extractedPalette: null,
     setExtractedPalette: (palette) => set({ extractedPalette: palette }),
+
+    // History State (replaces window CustomEvent 'historyUpdate')
+    canUndo: false,
+    canRedo: false,
+    historyLabel: '',
+    setHistoryState: ({ canUndo, canRedo, label }) => set({ canUndo, canRedo, historyLabel: label }),
+
+    // Theme State
+    theme: localStorage.getItem('app-theme') || 'dark',
+    setTheme: (theme) => {
+        localStorage.setItem('app-theme', theme);
+        document.documentElement.setAttribute('data-theme', theme);
+        set({ theme });
+    },
+    toggleTheme: () => set((state) => {
+        const next = state.theme === 'dark' ? 'light' : 'dark';
+        localStorage.setItem('app-theme', next);
+        document.documentElement.setAttribute('data-theme', next);
+        return { theme: next };
+    }),
 }));

@@ -1,0 +1,74 @@
+/* Layers Panel */
+.layers-list {
+  padding-right: 4px;
+}
+
+.layer-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px;
+  background: var(--bg-secondary);
+  border: 1px solid transparent;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  user-select: none;
+  transition: all 0.1s;
+}
+
+.layer-item:hover {
+  background: var(--bg-tertiary);
+}
+
+.layer-item.selected {
+  background: rgba(99, 102, 241, 0.1);
+  border-color: #6366f1;
+}
+
+.layer-item.dragging {
+  opacity: 0.5;
+  background: var(--bg-secondary);
+  border: 1px dashed var(--accent-primary);
+}
+
+.layer-handle {
+  cursor: grab;
+  color: var(--text-secondary);
+  display: flex;
+  align-items: center;
+}
+
+.layer-handle:active {
+  cursor: grabbing;
+}
+
+.layer-icon {
+  color: var(--text-primary);
+  display: flex;
+  align-items: center;
+}
+
+.layer-name {
+  flex: 1;
+  font-size: 0.85rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.layer-actions {
+  display: flex;
+  gap: 4px;
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+
+.layer-item:hover .layer-actions {
+  opacity: 1;
+}
+
+/* Sortable Ghost */
+.layer-item-ghost {
+  opacity: 0.5;
+  background: var(--accent-gradient);
+}

@@ -1,26 +1,12 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { RotateCcw, RotateCw } from 'lucide-react';
+import { useStore } from '../../store/useStore';
+import { useCanvas } from '../../context/CanvasContext';
 
-export function UndoRedoControls({ canvasManager }) {
-    const [canUndo, setCanUndo] = useState(false);
-    const [canRedo, setCanRedo] = useState(false);
-
-    useEffect(() => {
-        const handleHistoryUpdate = (e) => {
-            setCanUndo(e.detail.canUndo);
-            setCanRedo(e.detail.canRedo);
-        };
-
-        window.addEventListener('historyUpdate', handleHistoryUpdate);
-
-        // Initial check
-        if (canvasManager && canvasManager.historyManager) {
-            setCanUndo(canvasManager.historyManager.canUndo());
-            setCanRedo(canvasManager.historyManager.canRedo());
-        }
-
-        return () => window.removeEventListener('historyUpdate', handleHistoryUpdate);
-    }, [canvasManager]);
+export function UndoRedoControls() {
+    const { canvasManager } = useCanvas();
+    const canUndo = useStore((s) => s.canUndo);
+    const canRedo = useStore((s) => s.canRedo);
 
     // Keyboard Shortcuts (Ctrl+Z, Ctrl+Y)
     useEffect(() => {

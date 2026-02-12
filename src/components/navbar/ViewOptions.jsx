@@ -1,7 +1,11 @@
 import { useState } from 'react';
-import { Ruler, Grid3x3 } from 'lucide-react';
+import { Ruler, Grid3x3, Sun, Moon } from 'lucide-react';
+import { useCanvas } from '../../context/CanvasContext';
+import { useStore } from '../../store/useStore';
 
-export function ViewOptions({ canvasManager, showRulers, setShowRulers }) {
+export function ViewOptions() {
+    const { canvasManager } = useCanvas();
+    const { showRulers, setShowRulers, theme, toggleTheme } = useStore();
     const [gridVisible, setGridVisible] = useState(false);
 
     const handleToggleRulers = () => {
@@ -32,6 +36,13 @@ export function ViewOptions({ canvasManager, showRulers, setShowRulers }) {
                 title="Toggle Grid"
             >
                 <Grid3x3 size={16} />
+            </button>
+            <button
+                className="icon-btn"
+                onClick={toggleTheme}
+                title={theme === 'dark' ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
+            >
+                {theme === 'dark' ? <Sun size={16} /> : <Moon size={16} />}
             </button>
         </div>
     );

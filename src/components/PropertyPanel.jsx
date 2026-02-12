@@ -5,6 +5,7 @@ import { TextPanel } from './properties/TextPanel';
 import { StylePanel } from './properties/StylePanel';
 import { ImageEffectsPanel } from './properties/ImageEffectsPanel';
 import { ArrangementPanel } from './properties/ArrangementPanel';
+import { ObjectEffectsPanel } from './properties/ObjectEffectsPanel';
 import { DocumentPalette } from './properties/DocumentPalette';
 
 export function PropertyPanel() {
@@ -86,6 +87,12 @@ export function PropertyPanel() {
                  If we want stroke/shadow for images, we can enable it but must check fill conflict.
                  For now, keep simple: No StylePanel for images (as per config).
              */}
+
+            <ObjectEffectsPanel
+                activeObject={activeObject}
+                canvasManager={canvasManager}
+                onUpdate={handleUpdate}
+            />
 
             <div className="section-divider my-2"></div>
             <ArrangementPanel
